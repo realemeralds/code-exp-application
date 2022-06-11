@@ -6,18 +6,26 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 
-// Custom calendar-button icon <CalendarButton name='calendar-button' />
-import CalendarButton from "./components/CalendarButton";
+// Custom fonts
+import { useFonts } from "expo-font";
+
+// Custom icon
+import CalendarIcon from "./components/CustomIcon";
 
 // Import the Screen (compnents)
 import HomeScreen from "./screens/HomeScreen";
 import LibraryScreen from "./screens/LibraryScreen";
 import ProfileScreen from "./screens/ProfileScreen";
-import loaded from "./components/CustomFonts";
 
 const Tab = createBottomTabNavigator();
 
 export default function App() {
+  const [loaded] = useFonts({
+    SFUITextRegular: require("./assets/fonts/SFUITextRegular.otf"),
+    SFProTextLight: require("./assets/fonts/SFProTextLight.otf"),
+    SFProTextSemibold: require("./assets/fonts/SFProTextSemibold.otf"),
+  });
+
   // *The application*
   return (
     <NavigationContainer>
@@ -47,6 +55,12 @@ export default function App() {
 
 // Custom TabBar
 function MyTabBar({ state, descriptors, navigation }) {
+  const [loaded] = useFonts({
+    SFUITextRegular: require("./assets/fonts/SFUITextRegular.otf"),
+    SFProTextLight: require("./assets/fonts/SFProTextLight.otf"),
+    SFProTextSemibold: require("./assets/fonts/SFProTextSemibold.otf"),
+  });
+
   return (
     <View
       style={{
@@ -73,7 +87,7 @@ function MyTabBar({ state, descriptors, navigation }) {
         const icon = ({ focused }) => {
           let iconName;
           if (route.name === "Home") {
-            return <CalendarButton name="calendar-button" size={54} />;
+            return <CalendarIcon />;
           } else if (route.name === "Profile") {
             iconName = focused
               ? "person-circle-outline"
@@ -105,6 +119,10 @@ function MyTabBar({ state, descriptors, navigation }) {
           });
         };
 
+        {
+          console.log(icon);
+        }
+
         return (
           <TouchableOpacity
             accessibilityRole="button"
@@ -118,6 +136,8 @@ function MyTabBar({ state, descriptors, navigation }) {
               justifyContent: "center",
               flex: 1,
               alignItems: "center",
+              marginTop: route.name === "Home" ? -40 : 0,
+              marginHorizontal: route.name === "Home" ? -60 : 0,
             }}
           >
             {icon({ route })}

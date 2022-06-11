@@ -1,5 +1,5 @@
 import { React } from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreenHeaders from "../components/HomeScreenHeaders";
 
@@ -15,11 +15,7 @@ export default function HomeScreen() {
 }
 
 function CalendarScreen() {
-  return (
-    <View>
-      <HomeScreenHeaders />
-    </View>
-  );
+  return <View>{/* <HomeScreenHeaders /> */}</View>;
 }
 
 function DetailsScreen() {
