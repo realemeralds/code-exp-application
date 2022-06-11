@@ -5,12 +5,15 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import CalendarIcon from "./components/CustomIcon";
 
 // Custom fonts
+import * as Font from "expo-font";
 import { useFonts } from "expo-font";
 
-// Custom icon
-import CalendarIcon from "./components/CustomIcon";
+// UUID
+const { v4: uuidv4, v4 } = require("uuid");
+import "react-native-get-random-values";
 
 // Import the Screen (compnents)
 import HomeScreen from "./screens/HomeScreen";
@@ -32,6 +35,7 @@ export default function App() {
       <Tab.Navigator
         tabBar={(props) => <MyTabBar {...props} />}
         initialRouteName="Home"
+        screenOptions={{ headerTitleAlign: "center" }}
       >
         <Tab.Screen
           name="Profile"
@@ -41,7 +45,7 @@ export default function App() {
         <Tab.Screen
           name="Home"
           component={HomeScreen}
-          options={{ title: "calendar" }}
+          options={{ tabBarLabel: "Calendar", title: "" }}
         />
         <Tab.Screen
           name="Library"
@@ -55,19 +59,36 @@ export default function App() {
 
 // Custom TabBar
 function MyTabBar({ state, descriptors, navigation }) {
-  const [loaded] = useFonts({
-    SFUITextRegular: require("./assets/fonts/SFUITextRegular.otf"),
-    SFProTextLight: require("./assets/fonts/SFProTextLight.otf"),
-    SFProTextSemibold: require("./assets/fonts/SFProTextSemibold.otf"),
-  });
+  async function loadFonts() {
+    await Font.loadAsync({
+      SFUITextRegular: {
+        uri: require("./assets/fonts/SFUITextRegular.otf"),
+        display: Font.FontDisplay.FALLBACK,
+      },
+      SFProTextLight: {
+        uri: require("./assets/fonts/SFProTextLight.otf"),
+        display: Font.FontDisplay.FALLBACK,
+      },
+      SFProTextSemibold: {
+        uri: require("./assets/fonts/SFProTextSemibold.otf"),
+        display: Font.FontDisplay.FALLBACK,
+      },
+    });
+    this.setState({ fontsLoaded: true });
+  }
+
+  function componentDidMount() {
+    this.loadFonts();
+  }
 
   return (
     <View
       style={{
         flexDirection: "row",
         alignContent: "center",
-        alignSelf: "stretch",
         height: 69,
+        alignSelf: "center",
+        borderColor: "black",
       }}
     >
       {state.routes.map((route, index) => {
@@ -95,7 +116,7 @@ function MyTabBar({ state, descriptors, navigation }) {
           } else if (route.name === "Library") {
             iconName = focused ? "library-outline" : "library";
           }
-          return <Ionicons name={iconName} size={33} color="#222222" />;
+          return <Ionicons name={iconName} size={36} color="#222222" />;
         };
         const isFocused = state.index === index;
 
@@ -119,10 +140,6 @@ function MyTabBar({ state, descriptors, navigation }) {
           });
         };
 
-        {
-          console.log(icon);
-        }
-
         return (
           <TouchableOpacity
             accessibilityRole="button"
@@ -134,19 +151,22 @@ function MyTabBar({ state, descriptors, navigation }) {
             style={{
               flexDirection: "column",
               justifyContent: "center",
-              flex: 1,
+              flex: 0,
               alignItems: "center",
+              justifyContent: "center",
               marginTop: route.name === "Home" ? -40 : 0,
-              marginHorizontal: route.name === "Home" ? -60 : 0,
+              width: 70,
+              marginHorizontal: 15,
             }}
+            key={v4()}
           >
             {icon({ route })}
             <Text
               style={{
                 color: isFocused ? "#673ab7" : "#222",
-                textAlign: "center",
                 fontFamily: "SFProTextLight",
-                fontSize: route.name === "Home" ? 12 : 10,
+                fontSize: route.name === "Home" ? 13 : 10,
+                marginTop: route.name === "Home" ? 0 : -2,
               }}
             >
               {label}
