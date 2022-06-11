@@ -4,7 +4,6 @@
 
 ```
 npm i
-npm install --save react-native-calendars
 expo start
 ```
 
