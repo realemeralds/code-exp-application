@@ -1,0 +1,113 @@
+{
+    "IcoMoonType": "selection",
+    "icons": [
+        {
+            "icon": {
+                "paths": [
+                    "M1024 512c0 282.77-229.23 512-512 512s-512-229.23-512-512c0-282.77 229.23-512 512-512s512 229.23 512 512z",
+                    "M1024 512c0 282.77-229.23 512-512 512s-512-229.23-512-512c0-282.77 229.23-512 512-512s512 229.23 512 512z",
+                    "M375.247 520.923h54.701v56.922h-54.701v-56.922zM758.153 350.152v398.462c0 15.098-5.763 29.576-16.021 40.252-10.258 10.675-24.172 16.671-38.678 16.671h-382.906c-30.361 0-54.701-25.614-54.701-56.924v-398.462c0-15.096 5.763-29.574 16.021-40.25 10.258-10.675 24.172-16.671 38.68-16.671h27.35v-56.924h54.701v56.924h218.802v-56.924h54.701v56.924h27.352c14.507 0 28.42 5.997 38.678 16.671 10.258 10.677 16.021 25.154 16.021 40.25zM320.548 407.076h382.906v-56.924h-382.906v56.924zM703.454 748.614v-284.615h-382.906v284.615h382.906zM594.051 577.845v-56.922h54.701v56.922h-54.701zM484.65 577.845v-56.922h54.7v56.922h-54.7zM375.247 634.769h54.701v56.924h-54.701v-56.924zM594.051 691.692v-56.924h54.701v56.924h-54.701zM484.65 691.692v-56.924h54.7v56.924h-54.7z"
+                ],
+                "attrs": [
+                    {
+                        "fill": "rgb(52, 57, 80)"
+                    },
+                    {
+                        "fill": "none",
+                        "stroke": "rgb(34, 34, 34)",
+                        "strokeLinejoin": "miter",
+                        "strokeLinecap": "butt",
+                        "strokeMiterlimit": "4",
+                        "strokeWidth": 17.964912280701753
+                    },
+                    {
+                        "fill": "rgb(255, 255, 255)"
+                    }
+                ],
+                "isMulticolor": true,
+                "isMulticolor2": true,
+                "grid": 0,
+                "tags": [
+                    "calendar-button"
+                ],
+                "colorPermutations": {
+                    "255255255134343415257801": [
+                        {
+                            "f": 1
+                        },
+                        {
+                            "s": 0
+                        },
+                        {
+                            "f": 2
+                        }
+                    ]
+                }
+            },
+            "attrs": [
+                {
+                    "fill": "rgb(52, 57, 80)"
+                },
+                {
+                    "fill": "none",
+                    "stroke": "rgb(34, 34, 34)",
+                    "strokeLinejoin": "miter",
+                    "strokeLinecap": "butt",
+                    "strokeMiterlimit": "4",
+                    "strokeWidth": 17.964912280701753
+                },
+                {
+                    "fill": "rgb(255, 255, 255)"
+                }
+            ],
+            "properties": {
+                "order": 3,
+                "id": 0,
+                "name": "calendar-button",
+                "prevSize": 32,
+                "code": 59648,
+                "codes": [
+                    59648,
+                    59649,
+                    59650
+                ]
+            },
+            "setIdx": 0,
+            "setId": 0,
+            "iconIdx": 0
+        }
+    ],
+    "height": 1024,
+    "metadata": {
+        "name": "icomoon"
+    },
+    "preferences": {
+        "showGlyphs": true,
+        "showQuickUse": true,
+        "showQuickUse2": true,
+        "showSVGs": true,
+        "fontPref": {
+            "prefix": "icon-",
+            "metadata": {
+                "fontFamily": "icomoon"
+            },
+            "metrics": {
+                "emSize": 1024,
+                "baseline": 6.25,
+                "whitespace": 50
+            },
+            "embed": false
+        },
+        "imagePref": {
+            "prefix": "icon-",
+            "png": true,
+            "useClassSelector": true,
+            "color": 0,
+            "bgColor": 16777215,
+            "classSelector": ".icon"
+        },
+        "historySize": 50,
+        "showCodes": true,
+        "gridSize": 16
+    }
+}
