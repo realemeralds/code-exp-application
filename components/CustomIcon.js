@@ -2,14 +2,14 @@
 import { Circle, Path, Svg } from "react-native-svg";
 
 export default function CalendarIcon() {
-  let size = "60";
+  let size = "58";
 
   return (
     <>
       <Svg
         width={size}
         height={size}
-        viewBox="0 0 57 57"
+        viewBox="-2 -2 60 60"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
