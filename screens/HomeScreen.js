@@ -15,7 +15,7 @@ import styles from "../styles";
 import { createStackNavigator } from "@react-navigation/stack";
 
 // Custom icons and font
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 import * as Font from "expo-font";
 import { useFonts } from "expo-font";
 
@@ -23,16 +23,17 @@ import { useFonts } from "expo-font";
 import moment from "moment";
 import CalendarStrip from "react-native-calendar-strip";
 import Timetable from "react-native-calendar-timetable";
+import MyItemCard from "../components/CalendarItem";
 
 // Caching and Backend Integration
 import { Cache } from "react-native-cache";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 
 const Stack = createStackNavigator();
-var loaded;
 
 export default function HomeScreen({ navigation }) {
-  [loaded] = useFonts({
+  const [loaded] = useFonts({
     SFUITextRegular: require("../assets/fonts/SFUITextRegular.otf"),
     SFProTextLight: require("../assets/fonts/SFProTextLight.otf"),
     SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
@@ -99,7 +100,10 @@ export default function HomeScreen({ navigation }) {
 
   // *The stack nav*
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName="Calendar"
+    >
       <Stack.Screen name="Calendar" component={CalendarScreen} />
       <Stack.Screen name="Details" component={DetailsScreen} />
     </Stack.Navigator>
@@ -108,7 +112,7 @@ export default function HomeScreen({ navigation }) {
 
 // -------------------------------------------------------------------------CALENDAR STRIP-------------------------------------------------------------------
 
-function CalendarScreen() {
+function CalendarScreen({ screenName }) {
   const window = useWindowDimensions();
 
   const cache = new Cache({
@@ -137,11 +141,23 @@ function CalendarScreen() {
   // This is timetable functionality
   const [items, setItems] = React.useState([
     {
-      title: "Some event",
-      startDate: moment().add(25, "hour").toDate(),
-      endDate: moment().add(26, "hour").toDate(),
+      title: "Physical Conditioning",
+      description: "Run 2.4km around the camp",
+      backgroundColor: "#ECDDFF",
+      borderColor: "#A361EB",
+      attachments: [{ me: "test" }], // array of objects
+      startDate: moment().add(1, "hour").toDate(),
+      endDate: moment().add(2, "hour").toDate(),
     },
   ]);
+
+  let datesWhitelist = [
+    {
+      start: moment(),
+      end: moment().add(3, "days"), // total 4 days enabled
+    },
+  ];
+  let datesBlacklist = [moment().add(1, "days")]; // 1 day disabled
   return (
     <View style={styles.container}>
       <View
@@ -158,21 +174,23 @@ function CalendarScreen() {
             paddingBottom: 35,
             paddingTop: 10,
           }}
+          daySelectionAnimation={{
+            type: "background",
+            highlightColor: "#4fbe9e66",
+            duration: 400,
+          }}
           // Scroll
-          scrollable
-          scrollerPaging
-          shouldAllowFontScaling
-          scrollToOnSetSelectedDate={false} // TODO: this doesnt work
+          scrollToOnSetSelectedDate={false}
+          scrollable={true}
           // Array of whitelisted dates with moment()
-          // datesWhitelist={datesWhitelist}
-          // datesBlacklist={datesBlacklist}
+          datesWhitelist={datesWhitelist}
+          datesBlacklist={datesBlacklist}
           markedDates={markedDates}
+          // selectedDate={new Date()}
           // Header
           calendarHeaderStyle={{
             color: "#222222",
-            fontFamily: { loaded } ? "SFProTextSemibold" : "Roboto",
-            fontWeight: { loaded } ? "500" : "300",
-            fontSize: 14,
+            fontFamily: "SFProTextSemibold",
             alignSelf: "flex-start",
             marginLeft: 17,
           }}
@@ -185,13 +203,6 @@ function CalendarScreen() {
           // Number and day of week formatting
           dateNumberStyle={styles.dateNumberStyle}
           dateNameStyle={styles.dateNameStyle}
-          highlightDateNumberContainerStyle={{
-            backgroundColor: "rgba(79, 190, 158, 0.68)", // lime greenish
-            height: 24,
-            width: 24,
-            borderRadius: 12,
-            marginBottom: -2,
-          }}
           highlightDateNameStyle={[
             styles.dateNameStyle,
             {
@@ -217,14 +228,14 @@ function CalendarScreen() {
             },
           ]}
           // Left and right icons
-          // iconLeft={require("../assets/chevron-left.png")}
-          // iconRight={require("../assets/chevron-right.png")}
+          iconStyle={{ height: "60%", width: "60%" }}
+          iconLeft={require("../assets/chevron-left.png")}
+          iconRight={require("../assets/chevron-right.png")}
           iconContainer={{
-            flex: 0.2,
+            flex: 0.1,
             justifyContent: "center",
             alignItems: "center",
           }}
-          iconStyle={{ height: "60%", width: "60%" }}
           // Link to functions
           onDateSelected={console.log("date changed")}
           onWeekChanged={console.log("week changed")}
@@ -235,7 +246,7 @@ function CalendarScreen() {
           // Docs: https://github.com/dorkyboi/react-native-calendar-timetable?ref=reactnativeexample.com#layout
           // Rendering stuff
           items={items}
-          cardComponent={MyItemCard}
+          cardComponent={MyItemCard} // pass as a prop
           date={date}
           // Layout customisation
           width={window.width - 42}
@@ -259,7 +270,7 @@ function CalendarScreen() {
           hourHeight={45}
           linesTopOffset={20}
           linesLeftInset={17}
-          columnHorizontalPadding={8}
+          columnHorizontalPadding={0}
           enableSnapping
         />
       </ScrollView>
@@ -268,34 +279,13 @@ function CalendarScreen() {
   );
 }
 
-/**
- * Example item component
- * @param style Object with pre-calculated values, looks like {position: 'absolute', zIndex: 3, width: Number, height: Number, top: Number, left: Number}
- * @param item One of items supplied to Timetable through 'items' property
- * @param dayIndex For multiday items inicates current day index
- * @param daysTotal For multiday items indicates total amount of days
- */
-function MyItemCard({ style, item, dayIndex, daysTotal }) {
+// ----------------------------------------------------------------- DETAILS SCREEN --------------------------------------------------
+function DetailsScreen({}) {
   return (
-    <View
-      style={{
-        ...style, // apply calculated styles, be careful not to override these accidentally (unless you know what you are doing)
-        backgroundColor: "red",
-        borderRadius: 10,
-        elevation: 5,
-      }}
-    >
-      <Text>{item.title}</Text>
-      <Text>
-        {dayIndex} of {daysTotal}
-      </Text>
+    <View>
+      <Text>Hello World!</Text>
     </View>
   );
-}
-
-// ----------------------------------------------------------------- DETAILS SCREEN --------------------------------------------------
-function DetailsScreen() {
-  return <View />;
 }
 
 // ----------------------------- misc stuff ---------------------------------
@@ -357,11 +347,3 @@ function DetailsScreen() {
 //     setMarkedDates([...markedDates, ...newDates]);
 //   }
 // }
-
-// let datesWhitelist = [
-//   {
-//     start: moment(),
-//     end: moment().add(3, "days"), // total 4 days enabled
-//   },
-// ];
-// let datesBlacklist = [moment().add(1, "days")]; // 1 day disabled
