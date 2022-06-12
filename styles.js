@@ -17,8 +17,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   stripContainer: { flex: 1 },
-  dateNumberStyle: { color: "#222222", fontSize: 14 },
-  dateNameStyle: { color: "#222222", fontSize: 9 },
+  dateNumberStyle: {
+    color: "#222222",
+    fontSize: 14,
+    marginTop: -1,
+    paddingTop: 2,
+  },
+  dateNameStyle: {
+    color: "#222222",
+    fontSize: 9,
+    marginBottom: -5,
+    paddingTop: 9.5,
+  },
   calendarTitle: {
     fontFamily: "SFProTextSemibold",
     fontSize: 12,
