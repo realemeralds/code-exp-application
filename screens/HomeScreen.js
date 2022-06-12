@@ -14,7 +14,7 @@ import {
 import styles from "../styles";
 
 // Paper Text Input
-// import { TextInput } from "react-native-paper";
+import { TextInput } from "react-native-paper";
 
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -164,6 +164,7 @@ function CalendarScreen({ screenName, navigation }) {
           scrollToOnSetSelectedDate={false}
           selectedDate={currentDate}
           scrollerPaging
+          scrollable
           // Array of whitelisted dates with moment()
           // datesWhitelist={datesWhitelist}
           // datesBlacklist={datesBlacklist}
@@ -277,16 +278,6 @@ function DetailsScreen({ route }) {
     SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
   });
 
-  /* {
-      title: "Physical Conditioning",
-      description: "Run 2.4km around the camp",
-      backgroundColor: "#ECDDFF",
-      borderColor: "#A361EB",
-      attachments: [{ me: "test" }], // array of objects
-      startDate: moment().add(1, "hour").toDate(),
-      endDate: moment().add(2, "hour").toDate(),
-    },
-    */
   const timeText = () => {};
   return (
     <View style={styles.detailsContainer}>
@@ -310,6 +301,7 @@ function DetailsScreen({ route }) {
 function AddEventScreen() {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [eventName, setEventName] = React.useState("");
+  const [datePicked, setdatePicked] = React.useState(moment());
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -321,6 +313,7 @@ function AddEventScreen() {
 
   const handleConfirm = (date) => {
     console.warn("A date has been picked: ", date);
+    setdatePicked(moment(date));
     hideDatePicker();
   };
   // const handleConfirm = (date) => {
@@ -336,7 +329,7 @@ function AddEventScreen() {
     <View>
       <Text>Create an Event</Text>
       <View style={{ marginTop: 20 }}>
-        {/* <TextInput
+        <TextInput
           placeholder="Event Name"
           value={eventName}
           onChangeText={(text) => setEventName(text)}
@@ -348,10 +341,15 @@ function AddEventScreen() {
             fontSize: 20,
             color: "#8A8A8A",
           }}
-        /> */}
+        />
       </View>
       <Text>Date</Text>
-
+      <TouchableOpacity>
+        <Text>{datePicked.format("dddd, D MMMM YYYY")}</Text>
+      </TouchableOpacity>
+      <View>
+        <TouchableOpacity></TouchableOpacity>
+      </View>
       <TouchableOpacity onPress={showDatePicker}>
         <Feather name="calendar" size={24} color="black" />
       </TouchableOpacity>
