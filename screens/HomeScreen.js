@@ -110,11 +110,6 @@ export default function HomeScreen({ navigation }) {
 
 function CalendarScreen() {
   const window = useWindowDimensions();
-  [loaded] = useFonts({
-    SFUITextRegular: require("../assets/fonts/SFUITextRegular.otf"),
-    SFProTextLight: require("../assets/fonts/SFProTextLight.otf"),
-    SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
-  });
 
   const cache = new Cache({
     namespace: "LearnBetter",
@@ -153,7 +148,7 @@ function CalendarScreen() {
         style={{
           flex: 1,
           alignSelf: "stretch",
-          paddingHorizontal: 40,
+          paddingHorizontal: 20,
         }}
       >
         <CalendarStrip
@@ -172,7 +167,6 @@ function CalendarScreen() {
           // datesWhitelist={datesWhitelist}
           // datesBlacklist={datesBlacklist}
           markedDates={markedDates}
-          // selectedDate={}
           // Header
           calendarHeaderStyle={{
             color: "#222222",
@@ -191,19 +185,6 @@ function CalendarScreen() {
           // Number and day of week formatting
           dateNumberStyle={styles.dateNumberStyle}
           dateNameStyle={styles.dateNameStyle}
-          // styleWeekend
-          // weekendDateNameStyle={[
-          //   styles.dateNameStyle,
-          //   {
-          //     color: "#ffffff",
-          //   },
-          // ]}
-          // weekendDateNumberStyle={[
-          //   styles.dateNameStyle,
-          //   {
-          //     color: "#ffffff",
-          //   },
-          // ]}
           highlightDateNumberContainerStyle={{
             backgroundColor: "rgba(79, 190, 158, 0.68)", // lime greenish
             height: 24,
@@ -236,14 +217,14 @@ function CalendarScreen() {
             },
           ]}
           // Left and right icons
-          iconLeft={require("../assets/chevron-left.png")}
-          iconRight={require("../assets/chevron-right.png")}
+          // iconLeft={require("../assets/chevron-left.png")}
+          // iconRight={require("../assets/chevron-right.png")}
           iconContainer={{
-            flex: 0.05,
+            flex: 0.2,
             justifyContent: "center",
             alignItems: "center",
           }}
-          iconStyle={{ height: "50%", width: "50%" }}
+          iconStyle={{ height: "60%", width: "60%" }}
           // Link to functions
           onDateSelected={console.log("date changed")}
           onWeekChanged={console.log("week changed")}
@@ -318,6 +299,20 @@ function DetailsScreen() {
 }
 
 // ----------------------------- misc stuff ---------------------------------
+// styleWeekend
+// weekendDateNameStyle={[
+//   styles.dateNameStyle,
+//   {
+//     color: "#ffffff",
+//   },
+// ]}
+// weekendDateNumberStyle={[
+//   styles.dateNameStyle,
+//   {
+//     color: "#ffffff",
+//   },
+// ]}
+// ========================
 // function componentDidMount() {
 //   for (let i = 0; i < items.length; i++) {
 //     const { startDate, endDate } = items;
