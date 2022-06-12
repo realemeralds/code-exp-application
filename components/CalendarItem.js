@@ -1,6 +1,7 @@
 import styles from "../styles";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity, View, Text } from "react-native";
+import React, { useEffect } from "react";
 import CalendarAttachment from "./CalendarAttachment";
 /**
  * Example item component
@@ -9,7 +10,13 @@ import CalendarAttachment from "./CalendarAttachment";
  * @param dayIndex For multiday items inicates current day index
  * @param daysTotal For multiday items indicates total amount of days
  */
-export default function MyItemCard({ style, item, dayIndex, daysTotal }) {
+export default function MyItemCard({
+  style,
+  item,
+  dayIndex,
+  daysTotal,
+  currentPage,
+}) {
   const navigation = useNavigation(item);
 
   return (
@@ -32,11 +39,14 @@ export default function MyItemCard({ style, item, dayIndex, daysTotal }) {
       activeOpacity={0.9}
       onPress={() => {
         navigation.navigate("Details", item);
+        currentPage;
       }}
     >
       <View>
         <Text style={styles.calendarTitle}>{item.title}</Text>
-        <Text style={styles.calendarDescription}>{item.description}</Text>
+        <Text style={styles.calendarDescription} numberOfLines={1}>
+          {item.description}
+        </Text>
       </View>
       <CalendarAttachment attachments={item.attachments} />
     </TouchableOpacity>

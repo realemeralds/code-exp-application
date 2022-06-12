@@ -34,6 +34,34 @@ const styles = StyleSheet.create({
     color: "#222222",
     marginLeft: 2,
   },
+  // Details screen
+  detailsContainer: {
+    backgroundColor: "#FcFcFc",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    paddingTop: 20,
+    paddingHorizontal: 30,
+    flex: 1,
+    paddingBottom: 10,
+    borderBottomColor: "black",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  detailsTitle: {
+    fontFamily: "SFProTextSemibold",
+    fontSize: 26,
+    marginBottom: 5,
+  },
+  detailsTime: {
+    fontFamily: "SFUIProLight",
+    fontSize: 20,
+    color: "#8A8A8A",
+    marginBottom: 20,
+  },
+  detailsDescription: {
+    fontFamily: "SFUITextRegular",
+    fontSize: 14,
+    marginBottom: 20,
+  },
 });
 
 export default styles;

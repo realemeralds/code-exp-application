@@ -15,8 +15,6 @@ import ProfileScreen from "./screens/ProfileScreen";
 const Tab = createBottomTabNavigator();
 
 export default function App() {
-  const FocusedContext = React.createContext(null);
-
   // *The application*
   return (
     <NavigationContainer>
@@ -36,7 +34,11 @@ export default function App() {
         <Tab.Screen
           name="Home"
           component={HomeScreen}
-          options={{ tabBarLabel: "Calendar", title: "" }}
+          options={{
+            tabBarLabel: "Calendar",
+            title: "",
+            headerShown: false,
+          }}
         />
         <Tab.Screen
           name="Library"
