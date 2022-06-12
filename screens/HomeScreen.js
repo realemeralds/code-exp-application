@@ -8,6 +8,7 @@ import {
   Image,
   ScrollView,
   StyleSheet,
+  useWindowDimensions,
 } from "react-native";
 import styles from "../styles";
 
@@ -23,10 +24,15 @@ import moment from "moment";
 import CalendarStrip from "react-native-calendar-strip";
 import Timetable from "react-native-calendar-timetable";
 
+// Caching and Backend Integration
+import { Cache } from "react-native-cache";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const Stack = createStackNavigator();
+var loaded;
 
 export default function HomeScreen({ navigation }) {
-  const [loaded] = useFonts({
+  [loaded] = useFonts({
     SFUITextRegular: require("../assets/fonts/SFUITextRegular.otf"),
     SFProTextLight: require("../assets/fonts/SFProTextLight.otf"),
     SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
@@ -75,7 +81,8 @@ export default function HomeScreen({ navigation }) {
           <MaterialIcons name="search" size={30} color="black" />
           <Text
             style={{
-              fontFamily: "SFUITextRegular",
+              fontFamily: loaded ? "SFUITextRegular" : "Roboto",
+              letterSpacing: loaded ? 0 : -0.3,
               fontSize: 11,
               color: "black",
               alignSelf: "stretch",
@@ -99,25 +106,29 @@ export default function HomeScreen({ navigation }) {
   );
 }
 
-function CalendarScreen() {
-  const [date] = React.useState(new Date());
+// -------------------------------------------------------------------------CALENDAR STRIP-------------------------------------------------------------------
 
-  // ** TO LOAD ITEMS @ CASPER**
-  const [items] = React.useState([
-    {
-      title: "Some event",
-      startDate: moment().subtract(1, "hour").toDate(),
-      endDate: moment().add(1, "hour").toDate(),
+function CalendarScreen() {
+  const window = useWindowDimensions();
+  [loaded] = useFonts({
+    SFUITextRegular: require("../assets/fonts/SFUITextRegular.otf"),
+    SFProTextLight: require("../assets/fonts/SFProTextLight.otf"),
+    SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
+  });
+
+  const cache = new Cache({
+    namespace: "LearnBetter",
+    policy: {
+      maxEntries: 50000, // if unspecified, it can have unlimited entries
+      stdTTL: 0, // the standard ttl as number in seconds, default: 0 (unlimited)
     },
-  ]);
-  // let datesWhitelist = [
-  //   {
-  //     start: moment(),
-  //     end: moment().add(3, "days"), // total 4 days enabled
-  //   },
-  // ];
-  let datesBlacklist = [moment().add(1, "days")]; // 1 day disabled
-  let markedDates = [
+    backend: AsyncStorage,
+  });
+
+  // This is timetable functionality
+  const [date] = React.useState(new Date());
+  // This is strip functionality
+  let [markedDates, setMarkedDates] = useState([
     {
       date: moment(),
       dots: [
@@ -127,8 +138,15 @@ function CalendarScreen() {
         },
       ],
     },
-  ];
-
+  ]);
+  // This is timetable functionality
+  const [items, setItems] = React.useState([
+    {
+      title: "Some event",
+      startDate: moment().add(25, "hour").toDate(),
+      endDate: moment().add(26, "hour").toDate(),
+    },
+  ]);
   return (
     <View style={styles.container}>
       <View
@@ -152,13 +170,14 @@ function CalendarScreen() {
           scrollToOnSetSelectedDate={false} // TODO: this doesnt work
           // Array of whitelisted dates with moment()
           // datesWhitelist={datesWhitelist}
-          datesBlacklist={datesBlacklist}
+          // datesBlacklist={datesBlacklist}
           markedDates={markedDates}
           // selectedDate={}
           // Header
           calendarHeaderStyle={{
             color: "#222222",
-            fontFamily: "SFProTextSemibold",
+            fontFamily: { loaded } ? "SFProTextSemibold" : "Roboto",
+            fontWeight: { loaded } ? "500" : "300",
             fontSize: 14,
             alignSelf: "flex-start",
             marginLeft: 17,
@@ -224,22 +243,45 @@ function CalendarScreen() {
             justifyContent: "center",
             alignItems: "center",
           }}
-          // Marked dates marker style
-          // markedDatesStyle={{ marginTop: -2, marginBottom: 2 }}
           iconStyle={{ height: "50%", width: "50%" }}
           // Link to functions
-          onDateSelected={console.log("hi")}
-          onWeekChanged={console.log("hi")}
+          onDateSelected={console.log("date changed")}
+          onWeekChanged={console.log("week changed")}
         />
       </View>
-      {/* <ScrollView>
+      <ScrollView style={{ top: 80, marginBottom: 105 }}>
         <Timetable
-          // these two are required
+          // Docs: https://github.com/dorkyboi/react-native-calendar-timetable?ref=reactnativeexample.com#layout
+          // Rendering stuff
           items={items}
           cardComponent={MyItemCard}
-          date={date} // optional
+          date={date}
+          // Layout customisation
+          width={window.width - 42}
+          style={{
+            headersContainer: {},
+            lines: {
+              borderLeftWidth: 0,
+              borderRightWidth: 0,
+              borderColor: "#A5A5A5",
+            },
+            time: {
+              backgroundColor: "#FcFcFc",
+              color: "#A5A5A5",
+              fontFamily: "SFProTextLight",
+            },
+            nowLine: {
+              dot: { backgroundColor: "#343950", height: 6, width: 6 },
+              line: { backgroundColor: "#343950", height: 2 },
+            },
+          }}
+          hourHeight={45}
+          linesTopOffset={20}
+          linesLeftInset={17}
+          columnHorizontalPadding={8}
+          enableSnapping
         />
-      </ScrollView> */}
+      </ScrollView>
     </View>
     // **TODO: Finish calendar functionality**
   );
@@ -274,3 +316,57 @@ function MyItemCard({ style, item, dayIndex, daysTotal }) {
 function DetailsScreen() {
   return <View />;
 }
+
+// ----------------------------- misc stuff ---------------------------------
+// function componentDidMount() {
+//   for (let i = 0; i < items.length; i++) {
+//     const { startDate, endDate } = items;
+//     let newDates = [];
+//     if (moment(startDate).format("LL") === moment(endDate).format("LL")) {
+//       // spagetti code
+//       newDates.push({
+//         date: startDate,
+//         dots: [
+//           {
+//             color: "#185CDE",
+//             selectedcolor: "#185CDE",
+//           },
+//         ],
+//       });
+//     } else {
+//       newDates.push(
+//         ...markedDates,
+//         {
+//           date: startDate,
+//           dots: [
+//             {
+//               color: "#185CDE",
+//               selectedcolor: "#185CDE",
+//             },
+//           ],
+//         },
+//         {
+//           date: endDate,
+//           dots: [
+//             {
+//               color: "#185CDE",
+//               selectedcolor: "#185CDE",
+//             },
+//           ],
+//         }
+//       );
+//     }
+//     // push all the marks to the calendar
+//     console.log("pushing new marks");
+//     console.log(...newDates);
+//     setMarkedDates([...markedDates, ...newDates]);
+//   }
+// }
+
+// let datesWhitelist = [
+//   {
+//     start: moment(),
+//     end: moment().add(3, "days"), // total 4 days enabled
+//   },
+// ];
+// let datesBlacklist = [moment().add(1, "days")]; // 1 day disabled

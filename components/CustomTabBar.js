@@ -61,7 +61,6 @@ export default function MyTabBar({ state, descriptors, navigation }) {
 
         const icon = ({ route }) => {
           let iconName;
-          console.log(isFocused);
           if (route.name === "Home") {
             return <CalendarIcon />;
           } else if (route.name === "Profile") {
