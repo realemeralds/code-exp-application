@@ -1,6 +1,5 @@
 // Basic styles and components
 import React, { useEffect, useState } from "react";
-import useForceUpdate from "use-force-update";
 import {
   View,
   AppRegistry,
@@ -39,7 +38,6 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 // Caching and Backend Integration
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Cache } from "react-native-cache";
-import { eventNames } from "npm";
 
 const Stack = createStackNavigator();
 const cache = new Cache({
@@ -73,7 +71,6 @@ export default function HomeScreen({ navigation }) {
 // -------------------------------------------------------------------------CALENDAR STRIP-------------------------------------------------------------------
 
 function CalendarScreen({ screenName, navigation }) {
-  const forceUpdate = useForceUpdate();
   const window = useWindowDimensions();
 
   useEffect(() => {
@@ -117,7 +114,7 @@ function CalendarScreen({ screenName, navigation }) {
   };
 
   useEffect(() => {
-    getCachedItems("cachedItems").then(forceUpdate());
+    getCachedItems("cachedItems");
   }, []);
 
   const [items, setItems] = React.useState();
