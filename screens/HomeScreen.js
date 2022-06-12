@@ -96,25 +96,8 @@ function CalendarScreen({ screenName, navigation }) {
     let JSONValue = await cache.get(key);
     if (JSONValue !== null) {
       console.log(`Getting in ${JSON.parse(JSONValue)}`);
-      let parsedJSON = JSON.parse(JSONValue, function (key, value) {
-        if ((key === "startDate") | (key === "endDate")) {
-          return new Date(value);
-        } else {
-          return value;
-        }
-      });
-      for (var i = 0; i < parsedJSON.length; i++) {
-        console.log(Object.getOwnPropertyNames(parsedJSON[i]));
-      }
-      setItems(
-        JSON.parse(JSONValue, function (key, value) {
-          if ((key === "startDate") | (key === "endDate")) {
-            return new Date(value);
-          } else {
-            return value;
-          }
-        })
-      );
+      setItems(JSON.parse(JSONValue));
+      console.log(items);
     } else {
       setCachedItems(
         "cachedItems",
@@ -134,34 +117,10 @@ function CalendarScreen({ screenName, navigation }) {
   };
 
   useEffect(() => {
-    // setCachedItems(
-    //   "cachedItems",
-    //   JSON.stringify([
-    //     {
-    //       title: "Physical Conditioning",
-    //       description: "Run 2.4km around the camp",
-    //       backgroundColor: "#ECDDFF",
-    //       borderColor: "#A361EB",
-    //       attachments: [{ me: "test" }], // array of objects
-    //       startDate: moment().add(20, "hour").toDate(),
-    //       endDate: moment().add(21, "hour").toDate(),
-    //     },
-    //   ])
-    // );
-    // getCachedItems("cachedItems").then(forceUpdate());
+    getCachedItems("cachedItems").then(forceUpdate());
   }, []);
 
-  const [items, setItems] = React.useState([
-    {
-      title: "Physical Conditioning",
-      description: "Run 2.4km around the camp",
-      backgroundColor: "#ECDDFF",
-      borderColor: "#A361EB",
-      attachments: [{ me: "test" }], // array of objects
-      startDate: moment().add(20, "hour").toDate(),
-      endDate: moment().add(21, "hour").toDate(),
-    },
-  ]);
+  const [items, setItems] = React.useState();
 
   // This is strip functionality
   let [markedDates, setMarkedDates] = useState([
@@ -202,15 +161,12 @@ function CalendarScreen({ screenName, navigation }) {
           daySelectionAnimation={{
             type: "background",
             highlightColor: "#4fbe9e66",
-            duration: 200,
-            animProperty: "opacity",
-            animType: "easeIn",
+            duration: 400,
           }}
           // Scroll
           scrollToOnSetSelectedDate={false}
           selectedDate={currentDate}
           scrollerPaging
-          scrollable
           // Array of whitelisted dates with moment()
           // datesWhitelist={datesWhitelist}
           // datesBlacklist={datesBlacklist}
@@ -231,7 +187,6 @@ function CalendarScreen({ screenName, navigation }) {
           // Number and day of week formatting
           dateNumberStyle={styles.dateNumberStyle}
           dateNameStyle={styles.dateNameStyle}
-          dayContainerStyle={{ paddingBottom: 15, paddingTop: 3 }}
           highlightDateNameStyle={[
             styles.dateNameStyle,
             {
@@ -257,7 +212,7 @@ function CalendarScreen({ screenName, navigation }) {
             },
           ]}
           // Left and right icons
-          // markedDatesStyle={{ marginBottom: 5 }}
+          markedDatesStyle={{ marginTop: -1, paddingBottom: 1 }}
           iconStyle={{ height: "60%", width: "60%" }}
           iconLeft={require("../assets/chevron-left.png")}
           iconRight={require("../assets/chevron-right.png")}
