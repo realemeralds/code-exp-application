@@ -10,14 +10,22 @@ import {
   ScrollView,
   StyleSheet,
   useWindowDimensions,
+  Button,
 } from "react-native";
 import styles from "../styles";
+
+// Paper Text Input
+// import { TextInput } from "react-native-paper";
 
 import { createStackNavigator } from "@react-navigation/stack";
 
 // Custom icons and font
-import { MaterialIcons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
+
+// Custom Search and Add event components
+import SearchEvent from "../components/HeaderSearchEvent";
+import AddEvent from "../components/HeaderAddEvent";
 
 // Calendar
 import moment from "moment";
@@ -25,9 +33,13 @@ import CalendarStrip from "react-native-calendar-strip";
 import Timetable from "react-native-calendar-timetable";
 import MyItemCard from "../components/CalendarItem";
 
+// Date Picker
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+
 // Caching and Backend Integration
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Cache } from "react-native-cache";
+import { eventNames } from "npm";
 
 const Stack = createStackNavigator();
 const cache = new Cache({
@@ -53,6 +65,7 @@ export default function HomeScreen({ navigation }) {
     <Stack.Navigator initialRouteName="Calendar">
       <Stack.Screen name="Calendar" component={CalendarScreen} />
       <Stack.Screen name="Details" component={DetailsScreen} />
+      <Stack.Screen name="Events" component={AddEventScreen} />
     </Stack.Navigator>
   );
 }
@@ -66,59 +79,8 @@ function CalendarScreen({ screenName, navigation }) {
   useEffect(() => {
     navigation.setOptions({
       title: "",
-      headerRight: () => (
-        <TouchableOpacity
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginRight: 22,
-          }}
-          onPress={() => {
-            alert("Hello World!");
-          }}
-        >
-          <Text
-            style={{
-              fontFamily: "SFUITextRegular",
-              fontSize: 11,
-              color: "black",
-              alignSelf: "stretch",
-              lineHeight: 27,
-              marginRight: 4,
-            }}
-          >
-            Add Event
-          </Text>
-          <MaterialIcons name="add" size={30} color="black" />
-        </TouchableOpacity>
-      ),
-      headerLeft: () => (
-        <TouchableOpacity
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginLeft: 22,
-          }}
-          onPress={() => {
-            console.log(items);
-          }}
-        >
-          <MaterialIcons name="search" size={30} color="black" />
-          <Text
-            style={{
-              fontFamily: "SFUITextRegular",
-              letterSpacing: 0,
-              fontSize: 11,
-              color: "black",
-              alignSelf: "stretch",
-              lineHeight: 27,
-              marginLeft: 4,
-            }}
-          >
-            Search Event
-          </Text>
-        </TouchableOpacity>
-      ),
+      headerRight: () => <AddEvent />,
+      headerLeft: () => <SearchEvent />,
     });
   }, [screenName]);
 
@@ -390,6 +352,76 @@ function DetailsScreen({ route }) {
       </View>
     </View>
     // TODO: Attachment functionality
+  );
+}
+// ----------------------------- add event screen ---------------------------------
+function AddEventScreen() {
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [eventName, setEventName] = React.useState("");
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    console.warn("A date has been picked: ", date);
+    hideDatePicker();
+  };
+  // const handleConfirm = (date) => {
+  //   console.warn("A date has been picked: ", date);
+  //   hideDatePicker();
+  // };
+  // const handleConfirm = (date) => {
+  //   console.warn("A date has been picked: ", date);
+  //   hideDatePicker();
+  // };
+
+  return (
+    <View>
+      <Text>Create an Event</Text>
+      <View style={{ marginTop: 20 }}>
+        {/* <TextInput
+          placeholder="Event Name"
+          value={eventName}
+          onChangeText={(text) => setEventName(text)}
+          activeUnderlineColor="#6260CE"
+          underlineColor="#A5A5A5"
+          numberOfLines={1}
+          style={{
+            fontFamily: "SFUIProLight",
+            fontSize: 20,
+            color: "#8A8A8A",
+          }}
+        /> */}
+      </View>
+      <Text>Date</Text>
+
+      <TouchableOpacity onPress={showDatePicker}>
+        <Feather name="calendar" size={24} color="black" />
+      </TouchableOpacity>
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="datetime"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="time"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="time"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
+    </View>
   );
 }
 
