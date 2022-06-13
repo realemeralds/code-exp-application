@@ -3,7 +3,8 @@
 ## Setting up the dev environment
 
 ```
-npm i
+npm i -g yarn
+yarn
 expo start
 ```
 

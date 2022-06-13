@@ -17,7 +17,7 @@ export default function CalendarAttachment({ attachments }) {
           justifyContent: "center",
           alignItems: "center",
           marginTop: -5,
-          paddingLeft: 3,
+          paddingLeft: 0,
           flex: 1,
         }}
       >
