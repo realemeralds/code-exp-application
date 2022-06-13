@@ -28,7 +28,7 @@ const SplashScreen = () => {
           marginTop: 10,
         }}
       >
-        Master your NS experience
+        Get NS under control.
       </Text>
       <Text
         style={{
