@@ -17,47 +17,145 @@ const Tab = createBottomTabNavigator();
 // Login implementation
 import RootStackScreen from "./screens/RootStackScreen";
 import { AuthContext } from "./components/Context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Custom fonts + loading
 import AppLoading from "expo-app-loading";
+import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 
 export default function App() {
-  const [loaded, setLoaded] = useFonts({
+  const [loaded] = useFonts({
     SFUITextRegular: require("./assets/fonts/SFUITextRegular.otf"),
     SFProTextLight: require("./assets/fonts/SFProTextLight.otf"),
     SFProTextMedium: require("./assets/fonts/SFProTextMedium.otf"),
     SFProTextSemibold: require("./assets/fonts/SFProTextSemibold.otf"),
   });
-  const [userToken, setUserToken] = useState(null);
 
-  // initalLoginState = {
-  //   isLoading: true,
-  //   userName: null,
-  //   password: null,
-  //   pfp: null,
-  //   platoon: null,
-  // };
+  const initalLoginState = {
+    userName: null,
+    password: null,
+    pfp: null,
+    platoon: null,
+  };
 
+  const loginReducer = (prevState, action) => {
+    switch (action.type) {
+      case "RETRIEVE_CREDS":
+        console.log("Successfully retrieved creds");
+        return {
+          ...prevState,
+          userName: action.id,
+          password: action.password,
+        };
+      case "LOGIN":
+        console.log("Successfully logged in");
+        return {
+          ...prevState,
+          userName: action.id,
+          password: action.password,
+          platoon: action.platoon,
+          pfp: action.pfp,
+        };
+      case "LOGOUT":
+        console.log("Successfully logged out.");
+        return {
+          ...prevState,
+          userName: null,
+          password: null,
+          pfp: null,
+          platoon: null,
+        };
+      case "REGISTER":
+        console.log("Successfully registered.");
+        return {
+          ...prevState,
+          userName: action.id,
+          password: action.password,
+          pfp: action.pfp,
+          platoon: action.platoon,
+        };
+    }
+  };
+  const [loginState, dispatch] = React.useReducer(
+    loginReducer,
+    initalLoginState
+  );
+
+  // BACKEND CODE HERE
+  // BACKEND CODE HERE
+  // BACKEND CODE HERE
+  // BACKEND CODE HERE
   const authContext = useMemo(() => {
     return {
-      signIn: () => {
-        setUserToken("sfda");
+      signIn: async (userName, password) => {
+        // replace user, pass and Alpha with the values from db
+        if (userName === "user" && password === "pass") {
+          try {
+            await AsyncStorage.setItem("notAUserName", userName);
+            await AsyncStorage.setItem("notAPassword", password);
+          } catch (e) {
+            console.log(e);
+          }
+          pfp = { uri: "../../../../../../assets/pfpjpg.jpg" };
+          platoon = "Alpha";
+          dispatch({
+            type: "LOGIN",
+            id: userName,
+            password: password,
+            pfp: pfp,
+            platoon: platoon,
+          });
+        } else {
+          alert("Invalid Credentials.");
+        }
       },
-      signOut: () => {
-        setUserToken(null);
+      signOut: async () => {
+        try {
+          await AsyncStorage.removeItem("notAUserName");
+          await AsyncStorage.removeItem("notAPassword");
+        } catch (e) {
+          console.log(e);
+        }
+        console.log("removed stored creds");
+        dispatch({ type: "LOGOUT" });
       },
-      signUp: () => {
-        setUserToken("asd");
+      signUp: (userName, password, pfp, platoon) => {
+        dispatch({
+          type: "REGISTER",
+          id: userName,
+          password: password,
+          pfp: pfp,
+          platoon: platoon,
+        });
       },
     };
+  }, []);
+
+  // Check for token in AsyncStorage
+  useEffect(() => {
+    setTimeout(async () => {
+      try {
+        const parsedUsername = await AsyncStorage.getItem("notAUserName");
+        const parsedPassword = await AsyncStorage.getItem("notAPassword");
+        if (parsedPassword !== null && parsedUsername !== null) {
+          dispatch({
+            type: "LOGIN",
+            id: parsedUsername,
+            password: parsedPassword,
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }, 200);
   }, []);
 
   // *The application*
   return loaded ? (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
-        {userToken !== null ? (
+        {loginState.pfp !== null ? (
           <Tab.Navigator
             tabBar={(props) => <MyTabBar {...props} />}
             initialRouteName="Home"

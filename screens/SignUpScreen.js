@@ -315,7 +315,11 @@ const SignUpSecondScreen = ({ route }) => {
           if (platoon.length === 0) {
             alert("Key in a platoon name.");
           }
-          signUp({ ...route.params, platoon: platoon, pfp: null });
+          signUp({
+            ...route.params,
+            platoon: platoon,
+            pfp: { uri: "../../../../../../assets/pfpjpg.jpg" },
+          });
         }}
       >
         <Text

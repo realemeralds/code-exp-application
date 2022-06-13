@@ -11,8 +11,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Authentication
 import { AuthContext } from "../components/Context";
-var util = require("util");
-var encoder = new util.TextEncoder("utf-8");
 
 import { useFonts } from "expo-font";
 
@@ -24,25 +22,6 @@ const SignInScreen = () => {
     SFProTextMedium: require("../assets/fonts/SFProTextMedium.otf"),
     SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
   });
-
-  async function sha256(message) {
-    // encode as UTF-8
-    console.log(`encoding ${message}`);
-    const msgBuffer = new TextEncoder().encode(message);
-
-    // hash the message
-    const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
-
-    // convert ArrayBuffer to Array
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-
-    // convert bytes to hex string
-    const hashHex = hashArray
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("");
-    console.log(`encoded ${hashHex}`);
-    return hashHex;
-  }
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -145,7 +124,7 @@ const SignInScreen = () => {
             color: "#FFFFFF",
           }}
           onPress={() => {
-            signIn(username, sha256(password));
+            signIn(username, password);
           }}
         >
           Continue
