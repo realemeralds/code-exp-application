@@ -1,9 +1,3 @@
-<<<<<<< Updated upstream
-import React from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
-
-const SplashScreen = () => {
-=======
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 
@@ -26,7 +20,6 @@ const LoginSplashScreen = () => {
     SFProDisplayMedium: require("../assets/fonts/SFProDisplayMedium.otf"),
   });
 
->>>>>>> Stashed changes
   return (
     <View style={styles.container}>
       <Text>SignInScreen</Text>

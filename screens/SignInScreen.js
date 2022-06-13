@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-import React from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
-=======
 import React, { useEffect } from "react";
 import {
   View,
@@ -12,7 +8,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
->>>>>>> Stashed changes
 
 import { AuthContext } from "../components/Context";
 
@@ -21,10 +16,6 @@ const SignInScreen = () => {
 
   return (
     <View style={styles.container}>
-<<<<<<< Updated upstream
-      <Text>SignInScreen</Text>
-      <Button title="Click Here" onPress={() => alert("Button Cliked")} />
-=======
       <Image
         style={{
           height: 250,
@@ -122,7 +113,6 @@ const SignInScreen = () => {
           Continue
         </Text>
       </TouchableOpacity>
->>>>>>> Stashed changes
     </View>
   );
 };

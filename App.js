@@ -1,5 +1,5 @@
 // Basic react components
-import React from "react";
+import React, { useState, useEffect, useMemo } from "react";
 
 // React Navigation + Icons
 import { NavigationContainer } from "@react-navigation/native";
@@ -14,13 +14,10 @@ import ProfileScreen from "./screens/ProfileScreen";
 // Tab Navigator
 const Tab = createBottomTabNavigator();
 
-<<<<<<< Updated upstream
-=======
 // Login implementation
 import RootStackScreen from "./screens/RootStackScreen";
 import { AuthContext } from "./components/Context";
 
->>>>>>> Stashed changes
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [userToken, setUserToken] = useState(null);
@@ -51,38 +48,6 @@ export default function App() {
 
   // *The application*
   return (
-<<<<<<< Updated upstream
-    <NavigationContainer>
-      <Tab.Navigator
-        tabBar={(props) => <MyTabBar {...props} />}
-        initialRouteName="Home"
-        screenOptions={{
-          headerTitleAlign: "center",
-          headerStyle: { height: 70 },
-        }}
-      >
-        <Tab.Screen
-          name="Profile"
-          component={ProfileScreen}
-          options={{ title: "profile" }}
-        />
-        <Tab.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{
-            tabBarLabel: "Calendar",
-            title: "",
-            headerShown: false,
-          }}
-        />
-        <Tab.Screen
-          name="Library"
-          component={LibraryScreen}
-          options={{ title: "library" }}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
-=======
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
         {userToken !== null ? (
@@ -119,6 +84,5 @@ export default function App() {
         )}
       </NavigationContainer>
     </AuthContext.Provider>
->>>>>>> Stashed changes
   );
 }
