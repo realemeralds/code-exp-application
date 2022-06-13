@@ -1,5 +1,5 @@
 // Basic styles and components
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   View,
   AppRegistry,
@@ -81,36 +81,37 @@ function CalendarScreen({ screenName, navigation, route }) {
 
   // This is timetable functionality
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [items, setItems] = React.useState([]);
+  const [items, setItems] = useState([]); // Backend stuff
 
-  const setCachedItems = async (key, object) => {
-    console.log(`Putting in ${JSON.stringify(object)}`);
-    await cache.set(key, JSON.stringify(object));
-  };
+  // Problem
+  // const setCachedItems = async (key, object) => {
+  //   console.log(`Putting in ${JSON.stringify(object)}`);
+  //   await cache.set(key, JSON.stringify(object));
+  // };
 
-  const getCachedItems = async (key) => {
-    let JSONValue = await cache.get(key);
-    if (JSONValue !== null) {
-      console.log(`Getting in ${JSON.parse(JSONValue)}`);
-      // setItems(JSON.parse(JSONValue));
-      console.log(items);
-    } else {
-      setCachedItems(
-        "cachedItems",
-        JSON.stringify([
-          {
-            title: "Physical Conditioning",
-            description: "Run 2.4km around the camp",
-            backgroundColor: "#ECDDFF",
-            borderColor: "#A361EB",
-            attachments: [{ me: "test" }], // array of objects
-            startDate: moment().add(20, "hour").toDate(),
-            endDate: moment().add(21, "hour").toDate(),
-          },
-        ])
-      );
-    }
-  };
+  // const getCachedItems = async (key) => {
+  //   let JSONValue = await cache.get(key);
+  //   if (JSONValue !== null) {
+  //     console.log(`Getting in ${JSON.parse(JSONValue)}`);
+  //     // setItems(JSON.parse(JSONValue));
+  //     console.log(items);
+  //   } else {
+  //     setCachedItems(
+  //       "cachedItems",
+  //       JSON.stringify([
+  //         {
+  //           title: "Physical Conditioning",
+  //           description: "Run 2.4km around the camp",
+  //           backgroundColor: "#ECDDFF",
+  //           borderColor: "#A361EB",
+  //           attachments: [{ me: "test" }], // array of objects
+  //           startDate: moment().add(20, "hour").toDate(),
+  //           endDate: moment().add(21, "hour").toDate(),
+  //         },
+  //       ])
+  //     );
+  //   }
+  // };
 
   // TODO: remove before production
   // useEffect(() => {
@@ -132,22 +133,18 @@ function CalendarScreen({ screenName, navigation, route }) {
   //   // );
   // }, [screenName]);
 
+  // Turn into get request
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       if (typeof route.params !== "undefined") {
         const { newItem, event } = route.params;
         if (newItem) {
-          console.log(`Recieved item ${JSON.stringify(event)}`);
           event.startDate = moment(
             event.startDate,
             "DD-MM-YYYY HH:mm"
           ).toDate();
           event.endDate = moment(event.endDate, "DD-MM-YYYY HH:mm").toDate();
-          console.log(`Set item ${JSON.stringify(event)}`);
           setItems([...items, event]);
-          setTimeout(() => {
-            console.log(`Items are now ${JSON.stringify(items)}`);
-          }, 200);
         }
         route.params = undefined;
       }
@@ -429,7 +426,7 @@ function AddEventScreen() {
     <View
       style={[
         styles.container,
-        { paddingHorizontal: 40, alignItems: "flex-start", marginTop: -10 },
+        { paddingHorizontal: 40, alignItems: "flex-start", marginTop: -26 },
       ]}
     >
       <Text style={styles.eventTitle}>Create an Event</Text>
@@ -450,7 +447,7 @@ function AddEventScreen() {
           underlineColor="#6e6c7896"
           dense={true}
           style={{
-            marginTop: 6,
+            marginTop: 10,
             fontFamily: "SFProTextMedium",
             fontSize: 22,
             color: "#222222",
