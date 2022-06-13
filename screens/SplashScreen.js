@@ -1,77 +1,109 @@
 import React from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-  StyleSheet,
-  StatusBar,
-  Image,
-} from "react-native";
-// import * as Animatable from "react-native-animatable";
-import LinearGradient from "react-native-linear-gradient";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { useTheme } from "@react-navigation/native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+// Custom Fonts
+import { useFonts } from "expo-font";
+import { useNavigation } from "@react-navigation/native";
 
 const SplashScreen = () => {
+  const navigation = useNavigation();
+  const [loaded] = useFonts({
+    SFUITextRegular: require("../assets/fonts/SFUITextRegular.otf"),
+    SFProTextLight: require("../assets/fonts/SFProTextLight.otf"),
+    SFProTextMedium: require("../assets/fonts/SFProTextMedium.otf"),
+    SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
+  });
   return (
     <View style={styles.container}>
-      <Text>SignInScreen</Text>
-      <Button title="Click Here" onPress={() => alert("Button Cliked")} />
+      <Image
+        style={{ height: 250, width: 250, paddingHorizontal: 20 }}
+        source={require("../assets/boots.png")}
+      />
+      <Text
+        style={{
+          fontFamily: "SFProTextMedium",
+          textAlign: "center",
+          fontSize: 34,
+          color: "#111111",
+          paddingHorizontal: 40,
+          marginTop: 10,
+        }}
+      >
+        Get NS under control.
+      </Text>
+      <Text
+        style={{
+          marginTop: 10,
+          marginBottom: 40,
+          fontFamily: "SFProTextLight",
+          fontSize: 20,
+          paddingHorizontal: 40,
+          color: "#111111",
+          textAlign: "center",
+        }}
+      >
+        Prepare in advance. Coordinate your schedule.
+      </Text>
+      <TouchableOpacity
+        style={{
+          width: 150,
+          height: 50,
+          backgroundColor: "#FBFBFB",
+          alignItems: "center",
+          justifyContent: "center",
+          borderRadius: 10,
+          paddingVertical: 6,
+        }}
+        activeOpacity={0.5}
+      >
+        <Text
+          style={{
+            fontFamily: "SFUITextRegular",
+            fontSize: 24,
+            color: "#111111",
+          }}
+          onPress={() => {
+            navigation.navigate("SignInScreen");
+          }}
+        >
+          Sign In
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          marginTop: 20,
+          width: 150,
+          height: 50,
+          backgroundColor: "#343950",
+          alignItems: "center",
+          justifyContent: "center",
+          borderRadius: 10,
+          paddingVertical: 6,
+        }}
+        activeOpacity={0.5}
+        onPress={() => {
+          navigation.navigate("SignUpScreen");
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: "SFUITextRegular",
+            fontSize: 24,
+            color: "#FFFFFF",
+          }}
+        >
+          Register
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 export default SplashScreen;
 
-const { height } = Dimensions.get("screen");
-const height_logo = height * 0.28;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#009387",
-  },
-  header: {
-    flex: 2,
-    justifyContent: "center",
     alignItems: "center",
-  },
-  footer: {
-    flex: 1,
-    backgroundColor: "#fff",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingVertical: 50,
-    paddingHorizontal: 30,
-  },
-  logo: {
-    width: height_logo,
-    height: height_logo,
-  },
-  title: {
-    color: "#05375a",
-    fontSize: 30,
-    fontWeight: "bold",
-  },
-  text: {
-    color: "grey",
-    marginTop: 5,
-  },
-  button: {
-    alignItems: "flex-end",
-    marginTop: 30,
-  },
-  signIn: {
-    width: 150,
-    height: 40,
     justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 50,
-    flexDirection: "row",
-  },
-  textSign: {
-    color: "white",
-    fontWeight: "bold",
   },
 });

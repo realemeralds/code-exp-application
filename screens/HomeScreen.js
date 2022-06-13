@@ -18,9 +18,10 @@ import { TextInput } from "react-native-paper";
 
 import { createStackNavigator } from "@react-navigation/stack";
 
-// Custom icons and font
+// Custom icons and font and loading
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
+import AppLoading from "expo-app-loading";
 
 // Custom Search and Add event components
 import SearchEvent from "../components/HeaderSearchEvent";
@@ -56,13 +57,18 @@ export default function HomeScreen({ navigation }) {
 
   // Update the header when loaded, including the add event and search event stuff
 
-  // *The stack nav*
-  return (
+  return loaded ? (
     <Stack.Navigator initialRouteName="Calendar">
       <Stack.Screen name="Calendar" component={CalendarScreen} />
       <Stack.Screen name="Details" component={DetailsScreen} />
-      <Stack.Screen name="Events" component={AddEventScreen} />
+      <Stack.Screen
+        name="Events"
+        component={AddEventScreen}
+        options={{ headerTitle: "Add Event" }}
+      />
     </Stack.Navigator>
+  ) : (
+    <AppLoading />
   );
 }
 
@@ -426,7 +432,7 @@ function AddEventScreen() {
     <View
       style={[
         styles.container,
-        { paddingHorizontal: 40, alignItems: "flex-start", marginTop: -26 },
+        { paddingHorizontal: 40, alignItems: "flex-start", marginTop: -10 },
       ]}
     >
       <Text style={styles.eventTitle}>Create an Event</Text>
@@ -447,7 +453,7 @@ function AddEventScreen() {
           underlineColor="#6e6c7896"
           dense={true}
           style={{
-            marginTop: 10,
+            marginTop: 6,
             fontFamily: "SFProTextMedium",
             fontSize: 22,
             color: "#222222",
