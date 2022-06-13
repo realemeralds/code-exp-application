@@ -21,7 +21,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Custom fonts + loading
 import AppLoading from "expo-app-loading";
-import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 
 export default function App() {
