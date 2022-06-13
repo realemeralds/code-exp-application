@@ -1,11 +1,52 @@
 import React from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, TextInput } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const SignInScreen = () => {
   return (
     <View style={styles.container}>
-      <Text>SignInScreen</Text>
-      <Button title="Click Here" onPress={() => alert("Button Cliked")} />
+      <Image
+        style={{ height: 250, width: 250, paddingHorizontal: 20 }}
+        source={require("../assets/helmet.png")}
+      />
+      <Text
+        style={{
+          fontFamily: "SFProDisplayMedium",
+          fontSize: 36,
+          color: "#111111",
+        }}
+      >
+        Sign In
+      </Text>
+      <Text
+        style={{
+          marginTop: 4,
+          fontFamily: "SFProTextLight",
+          fontSize: 15,
+          color: "#111111",
+          marginBottom: 10,
+        }}
+      >
+        Welcome back! Sign in to sync your calendar...
+      </Text>
+      <View
+        style={{
+          flexDirection: "row",
+          marginTop: 10,
+          paddingBottom: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          paddingVertical: 5,
+        }}
+      >
+        <MaterialCommunityIcons color="#111111" name="account" size={34} />
+        <TextInput
+          placeholder="Username"
+          placeholderTextColor={"#86848C"}
+          style={styles.textInput}
+          selectionColor="#05375a"
+        />
+      </View>
     </View>
   );
 };
@@ -18,66 +59,3 @@ const styles = StyleSheet.create({
     backgroundColor: "#009387",
   },
 });
-//     header: {
-//         flex: 1,
-//         justifyContent: 'flex-end',
-//         paddingHorizontal: 20,
-//         paddingBottom: 50
-//     },
-//     footer: {
-//         flex: 3,
-//         backgroundColor: '#fff',
-//         borderTopLeftRadius: 30,
-//         borderTopRightRadius: 30,
-//         paddingHorizontal: 20,
-//         paddingVertical: 30
-//     },
-//     text_header: {
-//         color: '#fff',
-//         fontWeight: 'bold',
-//         fontSize: 30
-//     },
-//     text_footer: {
-//         color: '#05375a',
-//         fontSize: 18
-//     },
-//     action: {
-//         flexDirection: 'row',
-//         marginTop: 10,
-//         borderBottomWidth: 1,
-//         borderBottomColor: '#f2f2f2',
-//         paddingBottom: 5
-//     },
-//     actionError: {
-//         flexDirection: 'row',
-//         marginTop: 10,
-//         borderBottomWidth: 1,
-//         borderBottomColor: '#FF0000',
-//         paddingBottom: 5
-//     },
-//     textInput: {
-//         flex: 1,
-//         marginTop: Platform.OS === 'ios' ? 0 : -12,
-//         paddingLeft: 10,
-//         color: '#05375a',
-//     },
-//     errorMsg: {
-//         color: '#FF0000',
-//         fontSize: 14,
-//     },
-//     button: {
-//         alignItems: 'center',
-//         marginTop: 50
-//     },
-//     signIn: {
-//         width: '100%',
-//         height: 50,
-//         justifyContent: 'center',
-//         alignItems: 'center',
-//         borderRadius: 10
-//     },
-//     textSign: {
-//         fontSize: 18,
-//         fontWeight: 'bold'
-//     }
-//   });

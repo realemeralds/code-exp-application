@@ -6315,6 +6315,7 @@
     "jsonfile" "^6.0.1"
     "universalify" "^2.0.0"
 
+<<<<<<< HEAD
 "fs-extra@9.0.0":
   "integrity" "sha512-pmEYSk3vYsG/bF651KPUXZ+hvjpgWYw/Gc7W9NFUe3ZVLczKKWIij3IKpOrQcdw4TILtibFslZ0UmR8Vvzig4g=="
   "resolved" "https://registry.npmjs.org/fs-extra/-/fs-extra-9.0.0.tgz"
@@ -6325,6 +6326,8 @@
     "jsonfile" "^6.0.1"
     "universalify" "^1.0.0"
 
+=======
+>>>>>>> parent of 6d60f09 (package.json fix)
 "fs-extra@9.0.0":
   "integrity" "sha512-pmEYSk3vYsG/bF651KPUXZ+hvjpgWYw/Gc7W9NFUe3ZVLczKKWIij3IKpOrQcdw4TILtibFslZ0UmR8Vvzig4g=="
   "resolved" "https://registry.npmjs.org/fs-extra/-/fs-extra-9.0.0.tgz"
