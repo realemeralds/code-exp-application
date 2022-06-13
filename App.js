@@ -17,7 +17,7 @@ const Tab = createBottomTabNavigator();
 // Login implementation
 import RootStackScreen from "./screens/RootStackScreen";
 import { AuthContext } from "./components/Context";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 
 // Custom fonts + loading
 import AppLoading from "expo-app-loading";
@@ -91,8 +91,8 @@ export default function App() {
         // replace user, pass and Alpha with the values from db
         if (userName === "user" && password === "pass") {
           try {
-            await AsyncStorage.setItem("notAUserName", userName);
-            await AsyncStorage.setItem("notAPassword", password);
+            await SecureStore.setItemAsync("notAUserName", userName);
+            await SecureStore.setItemAsync("notAPassword", password);
           } catch (e) {
             console.log(e);
           }
@@ -111,8 +111,8 @@ export default function App() {
       },
       signOut: async () => {
         try {
-          await AsyncStorage.removeItem("notAUserName");
-          await AsyncStorage.removeItem("notAPassword");
+          await SecureStore.deleteItemAsync("notAUserName");
+          await SecureStore.deleteItemAsync("notAPassword");
         } catch (e) {
           console.log(e);
         }
@@ -131,12 +131,12 @@ export default function App() {
     };
   }, []);
 
-  // Check for token in AsyncStorage
+  // Check for token in SecureStore
   useEffect(() => {
     setTimeout(async () => {
       try {
-        const parsedUsername = await AsyncStorage.getItem("notAUserName");
-        const parsedPassword = await AsyncStorage.getItem("notAPassword");
+        const parsedUsername = await SecureStore.getItemAsync("notAUserName");
+        const parsedPassword = await SecureStore.getItemAsync("notAPassword");
         if (parsedPassword !== null && parsedUsername !== null) {
           dispatch({
             type: "LOGIN",

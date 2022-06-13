@@ -21,6 +21,7 @@ const SignInScreen = () => {
     SFProTextLight: require("../assets/fonts/SFProTextLight.otf"),
     SFProTextMedium: require("../assets/fonts/SFProTextMedium.otf"),
     SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
+    SFProDisplayMedium: require("../assets/fonts/SFProDisplayMedium.otf"),
   });
 
   const [username, setUsername] = useState("");
