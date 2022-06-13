@@ -19,7 +19,7 @@ import { TextInput } from "react-native-paper";
 import { createStackNavigator } from "@react-navigation/stack";
 
 // Custom icons and font
-import { Feather } from "@expo/vector-icons";
+import { Feather, Ionicons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 
 // Custom Search and Add event components
@@ -38,6 +38,11 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 // Caching and Backend Integration
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Cache } from "react-native-cache";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+
+// UUID
+const { v4: uuidv4, v4 } = require("uuid");
+import "react-native-get-random-values";
 
 const Stack = createStackNavigator();
 const cache = new Cache({
@@ -53,6 +58,7 @@ export default function HomeScreen({ navigation }) {
   const [loaded] = useFonts({
     SFUITextRegular: require("../assets/fonts/SFUITextRegular.otf"),
     SFProTextLight: require("../assets/fonts/SFProTextLight.otf"),
+    SFProTextMedium: require("../assets/fonts/SFProTextMedium.otf"),
     SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
   });
 
@@ -70,7 +76,7 @@ export default function HomeScreen({ navigation }) {
 
 // -------------------------------------------------------------------------CALENDAR STRIP-------------------------------------------------------------------
 
-function CalendarScreen({ screenName, navigation }) {
+function CalendarScreen({ screenName, navigation, route }) {
   const window = useWindowDimensions();
 
   useEffect(() => {
@@ -83,6 +89,7 @@ function CalendarScreen({ screenName, navigation }) {
 
   // This is timetable functionality
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [items, setItems] = React.useState([]);
 
   const setCachedItems = async (key, object) => {
     console.log(`Putting in ${JSON.stringify(object)}`);
@@ -93,7 +100,7 @@ function CalendarScreen({ screenName, navigation }) {
     let JSONValue = await cache.get(key);
     if (JSONValue !== null) {
       console.log(`Getting in ${JSON.parse(JSONValue)}`);
-      setItems(JSON.parse(JSONValue));
+      // setItems(JSON.parse(JSONValue));
       console.log(items);
     } else {
       setCachedItems(
@@ -113,11 +120,47 @@ function CalendarScreen({ screenName, navigation }) {
     }
   };
 
-  useEffect(() => {
-    getCachedItems("cachedItems");
-  }, []);
+  // TODO: remove before production
+  // useEffect(() => {
+  //   // console.log(items);
+  //   // getCachedItems("cachedItems");
+  //   // setCachedItems(
+  //   //   "cachedItems",
+  //   //   JSON.stringify([
+  //   //     {
+  //   //       title: "Physical Conditioning",
+  //   //       description: "Run 2.4km around the camp",
+  //   //       backgroundColor: "#ECDDFF",
+  //   //       borderColor: "#A361EB",
+  //   //       attachments: [{ me: "test" }], // array of objects
+  //   //       startDate: moment().add(20, "hour").toDate(),
+  //   //       endDate: moment().add(21, "hour").toDate(),
+  //   //     },
+  //   //   ])
+  //   // );
+  // }, [screenName]);
 
-  const [items, setItems] = React.useState();
+  useFocusEffect(
+    React.useCallback(() => {
+      if (typeof route.params !== "undefined") {
+        const { newItem, event } = route.params;
+        if (newItem) {
+          console.log(`Recieved item ${JSON.stringify(event)}`);
+          event.startDate = moment(
+            event.startDate,
+            "DD-MM-YYYY HH:mm"
+          ).toDate();
+          event.endDate = moment(event.endDate, "DD-MM-YYYY HH:mm").toDate();
+          console.log(`Set item ${JSON.stringify(event)}`);
+          setItems([...items, event]);
+          setTimeout(() => {
+            console.log(`Items are now ${JSON.stringify(items)}`);
+          }, 200);
+        }
+        route.params = undefined;
+      }
+    }, [route])
+  );
 
   // This is strip functionality
   let [markedDates, setMarkedDates] = useState([
@@ -139,6 +182,7 @@ function CalendarScreen({ screenName, navigation }) {
     },
   ];
   let datesBlacklist = [moment().add(1, "days")]; // 1 day disabled
+
   return (
     <View style={styles.container}>
       <View
@@ -226,7 +270,7 @@ function CalendarScreen({ screenName, navigation }) {
           // onWeekChanged={console.log("week changed")}
         />
       </View>
-      <ScrollView style={{ top: 80, marginBottom: 105 }}>
+      <ScrollView style={{ top: 84, marginBottom: 109 }}>
         <Timetable
           // Docs: https://github.com/dorkyboi/react-native-calendar-timetable?ref=reactnativeexample.com#layout
 
@@ -244,7 +288,7 @@ function CalendarScreen({ screenName, navigation }) {
               borderColor: "#A5A5A5",
             },
             time: {
-              backgroundColor: "#FcFcFc",
+              backgroundColor: "#FbFbFb",
               color: "#A5A5A5",
               fontFamily: "SFProTextLight",
             },
@@ -299,77 +343,251 @@ function DetailsScreen({ route }) {
 }
 // ----------------------------- add event screen ---------------------------------
 function AddEventScreen() {
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [eventName, setEventName] = React.useState("");
-  const [datePicked, setdatePicked] = React.useState(moment());
+  const navigation = useNavigation();
 
-  const showDatePicker = () => {
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [datePickerType, setDatePickerType] = useState("");
+  const [eventName, setEventName] = React.useState("");
+  const [eventDescription, setEventDescription] = React.useState("");
+  const [currentPicker, setCurrentPicker] = React.useState("");
+  const [datePicked, setdatePicked] = React.useState(moment());
+  const [startTime, setStartTime] = React.useState(moment());
+  const [endTime, setEndTime] = React.useState(moment().add("1", "hour"));
+  const [eventColor, setEventColor] = React.useState("#ECDDFF");
+  const [eventBorderColor, setEventBorderColor] = React.useState("#A361EB");
+  const [selectedElement, setSelectedElement] = React.useState(0);
+  const eventBorderColorArray = [
+    "#A361EB",
+    "#1FC3D2",
+    "#F5C978",
+    "#0CD195",
+    "#FE5E9B",
+  ];
+  const eventColorArray = [
+    "#EDDDFE",
+    "#E1E8FF",
+    "#FFF4E4",
+    "#D6F9F0",
+    "#FEE4ED",
+  ];
+
+  const showDatePicker = (datePicker, currentPicker) => {
+    setDatePickerType(datePicker);
+    setCurrentPicker(currentPicker);
     setDatePickerVisibility(true);
   };
 
-  const hideDatePicker = () => {
+  const hideDateTimePicker = () => {
     setDatePickerVisibility(false);
   };
 
   const handleConfirm = (date) => {
-    console.warn("A date has been picked: ", date);
-    setdatePicked(moment(date));
+    console.warn(`A ${currentPicker} has been picked: ${date}`);
+    if (currentPicker === "date") {
+      setdatePicked(moment(date));
+    } else if (currentPicker === "startTime") {
+      setStartTime(moment(date));
+      if (endTime.diff(moment(date, "minutes")) < 60) {
+        setEndTime(moment(date).add("1", "hour"));
+      }
+    } else {
+      setEndTime(moment(date));
+      if (startTime.diff(moment(date, "minutes")) > 45) {
+        setStartTime(moment(date).subtract("1", "hour"));
+      }
+    }
     hideDatePicker();
   };
-  // const handleConfirm = (date) => {
-  //   console.warn("A date has been picked: ", date);
-  //   hideDatePicker();
-  // };
-  // const handleConfirm = (date) => {
-  //   console.warn("A date has been picked: ", date);
-  //   hideDatePicker();
-  // };
 
+  const eventAdded = () => {
+    if (!eventName || !eventDescription) {
+      alert("Please fill up all fields.");
+      return null;
+    }
+    let interStartTime =
+      datePicked.format("DD-MM-YYYY") + " " + startTime.format("HH:mm");
+    let interEndTime =
+      datePicked.format("DD-MM-YYYY") + " " + endTime.format("HH:mm");
+    console.log({
+      newItem: true,
+      event: {
+        title: eventName,
+        description: eventDescription,
+        backgroundColor: eventColor,
+        borderColor: eventBorderColor,
+        attachments: undefined,
+        startDate: interStartTime,
+        endDate: interEndTime,
+      },
+    });
+    navigation.navigate("Calendar", {
+      newItem: true,
+      event: {
+        title: eventName,
+        description: eventDescription,
+        backgroundColor: eventColor,
+        borderColor: eventBorderColor,
+        attachments: { "pain and suffering": "hello world!" },
+        startDate: interStartTime,
+        endDate: interEndTime,
+      },
+    });
+  };
   return (
-    <View>
-      <Text>Create an Event</Text>
-      <View style={{ marginTop: 20 }}>
+    <View
+      style={[
+        styles.container,
+        { paddingHorizontal: 40, alignItems: "flex-start", marginTop: -10 },
+      ]}
+    >
+      <Text style={styles.eventTitle}>Create an Event</Text>
+      <View
+        style={{
+          flex: 0,
+          alignItems: "flex-start",
+          justifyContent: "flex-end",
+          height: 50,
+          alignSelf: "stretch",
+        }}
+      >
         <TextInput
-          placeholder="Event Name"
+          placeholder="Title"
           value={eventName}
           onChangeText={(text) => setEventName(text)}
-          activeUnderlineColor="#6260CE"
-          underlineColor="#A5A5A5"
-          numberOfLines={1}
+          activeUnderlineColor="#222222"
+          underlineColor="#6e6c7896"
+          dense={true}
           style={{
-            fontFamily: "SFUIProLight",
-            fontSize: 20,
-            color: "#8A8A8A",
+            marginTop: 6,
+            fontFamily: "SFProTextMedium",
+            fontSize: 22,
+            color: "#222222",
+            paddingTop: 10,
+            backgroundColor: "#FcFcFc",
+            textAlign: "left",
+            paddingHorizontal: 2,
+            alignSelf: "stretch",
           }}
         />
       </View>
-      <Text>Date</Text>
-      <TouchableOpacity>
-        <Text>{datePicked.format("dddd, D MMMM YYYY")}</Text>
-      </TouchableOpacity>
-      <View>
-        <TouchableOpacity></TouchableOpacity>
+      <View
+        style={{ flexDirection: "row", marginTop: 40, alignItems: "center" }}
+      >
+        <Text style={styles.eventColor}>Color</Text>
+        {eventBorderColorArray.map((element, index) => {
+          return (
+            <TouchableOpacity
+              style={{
+                width: 30,
+                height: 30,
+                borderRadius: 15,
+                backgroundColor: element,
+                borderColor: "#6E6C78",
+                borderWidth: index === selectedElement ? 2 : 0,
+                marginHorizontal: 5,
+              }}
+              onPress={() => {
+                setEventBorderColor(element);
+                setSelectedElement(index);
+                setEventColor(eventColorArray[index]);
+              }}
+              key={v4()}
+            ></TouchableOpacity>
+          );
+        })}
       </View>
-      <TouchableOpacity onPress={showDatePicker}>
-        <Feather name="calendar" size={24} color="black" />
+      <Text
+        style={[
+          styles.eventColor,
+          { marginTop: 20, fontSize: 16, fontFamily: "SFProTextMedium" },
+        ]}
+      >
+        Date
+      </Text>
+      <View
+        style={{
+          backgroundColor: "#EFEFEF",
+          paddingHorizontal: 15,
+          paddingVertical: 8,
+          flexDirection: "row",
+          alignItems: "center",
+          height: 60,
+          borderRadius: 5,
+          elevation: 2,
+          marginTop: 8,
+        }}
+      >
+        <Text
+          style={{
+            flex: 1,
+            textAlign: "left",
+            fontFamily: "SFProTextLight",
+            fontSize: 16,
+            color: "#000000",
+          }}
+        >
+          {datePicked.format("dddd, D MMMM YYYY")}
+        </Text>
+        <TouchableOpacity
+          style={{
+            borderLeftWidth: StyleSheet.hairlineWidth,
+            borderColor: "#222222",
+            paddingLeft: 12,
+          }}
+          onPress={() => showDatePicker("date", "date")}
+        >
+          <Feather name="calendar" size={24} color="black" />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.eventTimeContainer}>
+        <View style={[styles.eventTimeSelect, { marginRight: 5 }]}>
+          <Text style={styles.eventTimeText}>{startTime.format("k:mm")}</Text>
+          <TouchableOpacity
+            style={styles.eventTimeSelectButton}
+            onPress={() => showDatePicker("time", "startTime")}
+          >
+            <Feather name="chevron-down" size={22} color="black" />
+          </TouchableOpacity>
+        </View>
+        <View style={[styles.eventTimeSelect, { marginLeft: 5 }]}>
+          <Text style={styles.eventTimeText}>{endTime.format("k:mm")}</Text>
+          <TouchableOpacity
+            style={styles.eventTimeSelectButton}
+            onPress={() => showDatePicker("time", "endTime")}
+          >
+            <Feather name="chevron-down" size={22} color="black" />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <Text style={styles.eventDescriptionText}>Description</Text>
+      <View style={{ alignSelf: "stretch", height: 80 }}>
+        <TextInput
+          value={eventDescription}
+          onChangeText={(text) => setEventDescription(text)}
+          type="outlined"
+          multiline
+          selectionColor="#222222"
+          activeOutlineColor="#222222"
+          outlineColor="#6e6c7896"
+          numberOfLines={4}
+          style={styles.eventDescriptionInput}
+        />
+      </View>
+      <TouchableOpacity
+        style={styles.eventAddEventButtonContainer}
+        onPress={eventAdded}
+      >
+        <Text style={styles.eventAddEventButtonText}>Add Event</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.eventAttachButtonContainer}>
+        <Ionicons name="attach-sharp" size={16} color="white" />
+        <Text style={styles.eventAttachButtonText}>Attach Files...</Text>
       </TouchableOpacity>
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
-        mode="datetime"
+        mode={datePickerType}
         onConfirm={handleConfirm}
-        onCancel={hideDatePicker}
-      />
-      <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode="time"
-        onConfirm={handleConfirm}
-        onCancel={hideDatePicker}
-      />
-      <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode="time"
-        onConfirm={handleConfirm}
-        onCancel={hideDatePicker}
+        onCancel={hideDateTimePicker}
       />
     </View>
   );

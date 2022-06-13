@@ -9,7 +9,7 @@ export default function CalendarAttachment({ attachments }) {
     SFProTextLight: require("../assets/fonts/SFProTextLight.otf"),
     SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
   });
-  if (attachments.length !== 0) {
+  if (typeof attachments === "object" && attachments.length !== 0) {
     return (
       <View
         style={{
@@ -18,11 +18,13 @@ export default function CalendarAttachment({ attachments }) {
           alignItems: "center",
           marginTop: -5,
           paddingLeft: 3,
+          flex: 1,
         }}
       >
-        <Ionicons name="attach-sharp" size={24} color="black" />
+        <Ionicons name="attach-sharp" size={20} color="black" />
         <Text style={styles.calendarAttachment}>
-          {attachments.length} attachment{attachments.length > 1 ? "s" : ""}
+          {Object.keys(attachments).length} attachment
+          {attachments.length > 1 ? "s" : ""}
         </Text>
       </View>
     );

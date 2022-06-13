@@ -42,7 +42,7 @@ export default function MyItemCard({
         currentPage;
       }}
     >
-      <View>
+      <View style={{ flex: 1 }}>
         <Text style={styles.calendarTitle}>{item.title}</Text>
         <Text style={styles.calendarDescription} numberOfLines={1}>
           {item.description}
