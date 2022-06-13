@@ -9,6 +9,12 @@ import SignUpScreen from "./SignUpScreen";
 const RootStack = createStackNavigator();
 
 const RootStackScreen = ({ navigation }) => {
+  const [loaded] = useFonts({
+    SFUITextRegular: require("../assets/fonts/SFUITextRegular.otf"),
+    SFProTextLight: require("../assets/fonts/SFProTextLight.otf"),
+    SFProTextMedium: require("../assets/fonts/SFProTextMedium.otf"),
+    SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
+  });
   return (
     <RootStack.Navigator screenOptions={{ headerShown: false }}>
       <RootStack.Screen name="SplashScreen" component={LoginSplashScreen} />
