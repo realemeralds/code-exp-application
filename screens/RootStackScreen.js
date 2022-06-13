@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import LoginSplashScreen from "./SplashScreen";
 import SignInScreen from "./SignInScreen";
 import SignUpScreen from "./SignUpScreen";
+import { useFonts } from "expo-font";
 
 const RootStack = createStackNavigator();
 

@@ -11,8 +11,16 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { AuthContext } from "../components/Context";
 
+import { useFonts } from "expo-font";
+
 const SignInScreen = () => {
   const { signIn } = React.useContext(AuthContext);
+  const [loaded] = useFonts({
+    SFUITextRegular: require("../assets/fonts/SFUITextRegular.otf"),
+    SFProTextLight: require("../assets/fonts/SFProTextLight.otf"),
+    SFProTextMedium: require("../assets/fonts/SFProTextMedium.otf"),
+    SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
+  });
 
   return (
     <View style={styles.container}>

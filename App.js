@@ -39,13 +39,6 @@ export default function App() {
     };
   }, []);
 
-  useEffect(() => {
-    setTimeout(() => {
-      console.log(authContext.signIn);
-      setIsLoading(false);
-    }, 1000);
-  }, []);
-
   // *The application*
   return (
     <AuthContext.Provider value={authContext}>
