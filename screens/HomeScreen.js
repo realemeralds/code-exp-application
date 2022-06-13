@@ -44,14 +44,6 @@ const { v4: uuidv4, v4 } = require("uuid");
 import "react-native-get-random-values";
 
 const Stack = createStackNavigator();
-const cache = new Cache({
-  namespace: "myapp",
-  policy: {
-    maxEntries: 50000, // if unspecified, it can have unlimited entries
-    stdTTL: 0, // the standard ttl as number in seconds, default: 0 (unlimited)
-  },
-  backend: AsyncStorage,
-});
 
 export default function HomeScreen({ navigation }) {
   const [loaded] = useFonts({
@@ -381,7 +373,7 @@ function AddEventScreen() {
   };
 
   const handleConfirm = (date) => {
-    console.warn(`A ${currentPicker} has been picked: ${date}`);
+    // console.warn(`A ${currentPicker} has been picked: ${date}`);
     if (currentPicker === "date") {
       setdatePicked(moment(date));
     } else if (currentPicker === "startTime") {
