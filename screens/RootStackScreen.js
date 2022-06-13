@@ -15,6 +15,7 @@ const RootStackScreen = ({ navigation }) => {
     SFProTextLight: require("../assets/fonts/SFProTextLight.otf"),
     SFProTextMedium: require("../assets/fonts/SFProTextMedium.otf"),
     SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
+    SFProDisplayMedium: require("../assets/fonts/SFProDisplayMedium.otf"),
   });
   return (
     <RootStack.Navigator screenOptions={{ headerShown: false }}>

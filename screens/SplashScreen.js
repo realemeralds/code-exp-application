@@ -6,7 +6,12 @@ import { useNavigation } from "@react-navigation/native";
 
 const SplashScreen = () => {
   const navigation = useNavigation();
-
+  const [loaded] = useFonts({
+    SFUITextRegular: require("../assets/fonts/SFUITextRegular.otf"),
+    SFProTextLight: require("../assets/fonts/SFProTextLight.otf"),
+    SFProTextMedium: require("../assets/fonts/SFProTextMedium.otf"),
+    SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
+  });
   return (
     <View style={styles.container}>
       <Image
@@ -75,15 +80,15 @@ const SplashScreen = () => {
           paddingVertical: 6,
         }}
         activeOpacity={0.5}
+        onPress={() => {
+          navigation.navigate("SignUpScreen");
+        }}
       >
         <Text
           style={{
             fontFamily: "SFUITextRegular",
             fontSize: 24,
             color: "#FFFFFF",
-          }}
-          onPress={() => {
-            navigation.navigate("SignUpScreen");
           }}
         >
           Register

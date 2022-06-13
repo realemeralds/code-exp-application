@@ -18,29 +18,43 @@ const Tab = createBottomTabNavigator();
 import RootStackScreen from "./screens/RootStackScreen";
 import { AuthContext } from "./components/Context";
 
+// Custom fonts + loading
+import AppLoading from "expo-app-loading";
+import { useFonts } from "expo-font";
+
 export default function App() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [loaded, setLoaded] = useFonts({
+    SFUITextRegular: require("./assets/fonts/SFUITextRegular.otf"),
+    SFProTextLight: require("./assets/fonts/SFProTextLight.otf"),
+    SFProTextMedium: require("./assets/fonts/SFProTextMedium.otf"),
+    SFProTextSemibold: require("./assets/fonts/SFProTextSemibold.otf"),
+  });
   const [userToken, setUserToken] = useState(null);
+
+  // initalLoginState = {
+  //   isLoading: true,
+  //   userName: null,
+  //   password: null,
+  //   pfp: null,
+  //   platoon: null,
+  // };
 
   const authContext = useMemo(() => {
     return {
       signIn: () => {
         setUserToken("sfda");
-        setIsLoading(false);
       },
       signOut: () => {
         setUserToken(null);
-        setIsLoading(false);
       },
       signUp: () => {
         setUserToken("asd");
-        setIsLoading(false);
       },
     };
   }, []);
 
   // *The application*
-  return (
+  return loaded ? (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
         {userToken !== null ? (
@@ -55,7 +69,10 @@ export default function App() {
             <Tab.Screen
               name="Profile"
               component={ProfileScreen}
-              options={{ title: "profile" }}
+              options={{
+                title: "Profile",
+                headerShown: false,
+              }}
             />
             <Tab.Screen
               name="Home"
@@ -77,5 +94,7 @@ export default function App() {
         )}
       </NavigationContainer>
     </AuthContext.Provider>
+  ) : (
+    <AppLoading />
   );
 }

@@ -18,9 +18,10 @@ import { TextInput } from "react-native-paper";
 
 import { createStackNavigator } from "@react-navigation/stack";
 
-// Custom icons and font
+// Custom icons and font and loading
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
+import AppLoading from "expo-app-loading";
 
 // Custom Search and Add event components
 import SearchEvent from "../components/HeaderSearchEvent";
@@ -56,13 +57,14 @@ export default function HomeScreen({ navigation }) {
 
   // Update the header when loaded, including the add event and search event stuff
 
-  // *The stack nav*
-  return (
+  return loaded ? (
     <Stack.Navigator initialRouteName="Calendar">
       <Stack.Screen name="Calendar" component={CalendarScreen} />
       <Stack.Screen name="Details" component={DetailsScreen} />
       <Stack.Screen name="Events" component={AddEventScreen} />
     </Stack.Navigator>
+  ) : (
+    <AppLoading />
   );
 }
 
