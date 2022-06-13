@@ -1,5 +1,5 @@
 // Basic react components
-import React, { useState, useMemo, useEffect } from "react";
+import React from "react";
 
 // React Navigation + Icons
 import { NavigationContainer } from "@react-navigation/native";
@@ -10,13 +10,6 @@ import MyTabBar from "./components/CustomTabBar";
 import HomeScreen from "./screens/HomeScreen";
 import LibraryScreen from "./screens/LibraryScreen";
 import ProfileScreen from "./screens/ProfileScreen";
-
-// AppLoading splashScreen
-import AppLoading from "expo-app-loading";
-import { AuthContext } from "./components/AuthContext";
-
-// Authentication
-import RootStackScreen from "./screens/RootStackScreen";
 
 // Tab Navigator
 const Tab = createBottomTabNavigator();
@@ -48,9 +41,7 @@ export default function App() {
 
   // *The application*
   return (
-    <AuthContext.Provider value={authContext}>
-      <RootStackScreen />
-      {/* <NavigationContainer>
+    <NavigationContainer>
       <Tab.Navigator
         tabBar={(props) => <MyTabBar {...props} />}
         initialRouteName="Home"
@@ -79,7 +70,6 @@ export default function App() {
           options={{ title: "library" }}
         />
       </Tab.Navigator>
-    </NavigationContainer> */}
-    </AuthContext.Provider>
+    </NavigationContainer>
   );
 }
