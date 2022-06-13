@@ -36,7 +36,8 @@ import MyItemCard from "../components/CalendarItem";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 // Caching and Backend Integration
-import { AsyncStorage } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Cache } from "react-native-cache";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 // UUID

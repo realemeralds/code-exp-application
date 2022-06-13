@@ -30,7 +30,7 @@ export default function MyItemCard({
         borderLeftWidth: 5,
         paddingLeft: 5,
         paddingTop: 5,
-        paddingRight: 4,
+        paddingRight: 7,
         justifyContent: "space-between",
         alignItems: "stretch",
         flexDirection: "row",

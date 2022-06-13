@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: "#222222",
     marginLeft: 2,
-    marginRight: -26,
   },
   // Details screen
   detailsContainer: {
