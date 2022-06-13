@@ -425,7 +425,7 @@ function AddEventScreen() {
     <View
       style={[
         styles.container,
-        { paddingHorizontal: 40, alignItems: "flex-start", marginTop: -10 },
+        { paddingHorizontal: 40, alignItems: "flex-start", marginTop: -26 },
       ]}
     >
       <Text style={styles.eventTitle}>Create an Event</Text>
@@ -446,7 +446,7 @@ function AddEventScreen() {
           underlineColor="#6e6c7896"
           dense={true}
           style={{
-            marginTop: 6,
+            marginTop: 10,
             fontFamily: "SFProTextMedium",
             fontSize: 22,
             color: "#222222",

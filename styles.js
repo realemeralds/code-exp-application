@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   },
   eventTitle: {
     fontFamily: "SFProTextMedium",
-    fontSize: 26,
+    fontSize: 30,
     color: "#222222",
     alignSelf: "flex-start",
     paddingLeft: 0,
