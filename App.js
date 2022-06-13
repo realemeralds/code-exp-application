@@ -40,10 +40,6 @@ export default function App() {
     };
   }, []);
 
-  if (isLoading) {
-    return <AppLoading />;
-  }
-
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
