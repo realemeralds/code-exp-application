@@ -61,7 +61,11 @@ export default function HomeScreen({ navigation }) {
     <Stack.Navigator initialRouteName="Calendar">
       <Stack.Screen name="Calendar" component={CalendarScreen} />
       <Stack.Screen name="Details" component={DetailsScreen} />
-      <Stack.Screen name="Events" component={AddEventScreen} />
+      <Stack.Screen
+        name="Events"
+        component={AddEventScreen}
+        options={{ headerTitle: "Add Event" }}
+      />
     </Stack.Navigator>
   ) : (
     <AppLoading />

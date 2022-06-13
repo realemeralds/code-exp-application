@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -21,6 +21,9 @@ const SignInScreen = () => {
     SFProTextMedium: require("../assets/fonts/SFProTextMedium.otf"),
     SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
   });
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
     <View style={styles.container}>
@@ -71,6 +74,8 @@ const SignInScreen = () => {
           placeholderTextColor={"#86848C"}
           style={styles.textInput}
           selectionColor="#05375a"
+          value={username}
+          onChangeText={setUsername}
         />
       </View>
       <View
@@ -93,6 +98,9 @@ const SignInScreen = () => {
           placeholderTextColor={"#86848C"}
           style={styles.textInput}
           selectionColor="#05375a"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
         />
       </View>
       <TouchableOpacity
@@ -115,7 +123,7 @@ const SignInScreen = () => {
             color: "#FFFFFF",
           }}
           onPress={() => {
-            signIn();
+            signIn(username, password);
           }}
         >
           Continue

@@ -127,7 +127,7 @@ export default function ProfileScreen() {
           elevation: 3,
           marginTop: 20,
         }}
-        // onPress={signOut()}
+        onPress={() => signOut()}
       >
         <MaterialCommunityIcons size={30} color="#111111" name="exit-to-app" />
         <Text

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,7 +9,11 @@ import {
   Platform,
   TouchableOpacity,
 } from "react-native";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import {
+  MaterialCommunityIcons,
+  MaterialIcons,
+  Ionicons,
+} from "@expo/vector-icons";
 
 // Custom Fonts + Loading
 import { useFonts } from "expo-font";
@@ -18,6 +22,9 @@ import AppLoading from "expo-app-loading";
 // React Navigation + Icons
 import { createStackNavigator } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
+
+// Authentication
+import { AuthContext } from "../components/Context";
 const Stack = createStackNavigator();
 
 const SignUpScreen = () => {
@@ -31,11 +38,9 @@ const SignUpScreen = () => {
   // Update the header when loaded, including the add event and search event stuff
   return loaded ? (
     <Stack.Navigator
-      screenOptions={
-        {
-          // header: () => <></>
-        }
-      }
+      screenOptions={{
+        header: () => <></>,
+      }}
       initialRouteName="SignUpFirstScreen"
     >
       <Stack.Screen name="SignUpFirstScreen" component={SignUpFirstScreen} />
@@ -56,6 +61,10 @@ const SignUpFirstScreen = () => {
     SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
     SFProDisplayMedium: require("../assets/fonts/SFProDisplayMedium.otf"),
   });
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   return (
     <View style={styles.container}>
@@ -102,6 +111,8 @@ const SignUpFirstScreen = () => {
         <TextInput
           placeholder="Username"
           placeholderTextColor={"#86848C"}
+          onChangeText={setUsername}
+          value={username}
           style={styles.textInput}
           selectionColor="#05375a"
         />
@@ -120,7 +131,10 @@ const SignUpFirstScreen = () => {
         <TextInput
           placeholder="Password"
           style={styles.textInput}
+          onChangeText={setPassword}
+          value={password}
           selectionColor="#05375a"
+          secureTextEntry={true}
         />
       </View>
       <View
@@ -138,6 +152,9 @@ const SignUpFirstScreen = () => {
           placeholder="Reenter Password"
           style={styles.textInput}
           selectionColor="#05375a"
+          secureTextEntry={true}
+          onChangeText={setConfirmPassword}
+          value={confirmPassword}
         />
       </View>
       <TouchableOpacity
@@ -152,7 +169,27 @@ const SignUpFirstScreen = () => {
           borderRadius: 10,
           paddingVertical: 10,
         }}
-        onPress={() => navigation.navigate("SignUpSecondScreen")}
+        // TODO: Implement hashing here
+        onPress={() => {
+          if (
+            password.length === 0 ||
+            username.length === 0 ||
+            confirmPassword.length === 0
+          ) {
+            alert("Please fill in all fields.");
+            return;
+          } else if (password !== confirmPassword) {
+            alert("Passwords do not match, please key in again.");
+            return;
+          } else if (password.length < 8) {
+            alert("Password must be at least 8 characters long");
+            return;
+          }
+          navigation.navigate("SignUpSecondScreen", {
+            username: username,
+            password: password,
+          });
+        }}
       >
         <Text
           style={{
@@ -168,8 +205,12 @@ const SignUpFirstScreen = () => {
   );
 };
 
-const SignUpSecondScreen = () => {
+const SignUpSecondScreen = ({ route }) => {
+  const { signUp } = React.useContext(AuthContext);
   const navigation = useNavigation();
+
+  const [platoon, setPlatoon] = useState("");
+
   return (
     <View style={styles.container}>
       <Image
@@ -196,7 +237,7 @@ const SignUpSecondScreen = () => {
           fontFamily: "SFProTextLight",
           fontSize: 15,
           color: "#111111",
-          marginBottom: 10,
+          marginBottom: 25,
         }}
       >
         Just a few more details to add for proper syncing
@@ -204,7 +245,6 @@ const SignUpSecondScreen = () => {
       <View
         style={{
           flexDirection: "row",
-          marginTop: 10,
           paddingBottom: 1,
           justifyContent: "center",
           alignItems: "center",
@@ -221,42 +261,44 @@ const SignUpSecondScreen = () => {
           placeholderTextColor={"#86848C"}
           style={styles.textInput}
           selectionColor="#05375a"
+          onChangeText={setPlatoon}
+          value={platoon}
         />
       </View>
-      <View
+      <TouchableOpacity
         style={{
           flexDirection: "row",
-          marginTop: 10,
-          paddingBottom: 1,
           justifyContent: "center",
           alignItems: "center",
-          paddingVertical: 5,
-        }}
-      >
-        <MaterialCommunityIcons name="human-child" size={34} color="black" />
-        <TextInput
-          placeholder="Age"
-          style={styles.textInput}
-          selectionColor="#05375a"
-        />
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
+          backgroundColor: "#52555B",
+          borderRadius: 5,
+          paddingLeft: 10,
+          paddingVertical: 7,
+          paddingRight: 13,
+          alignSelf: "center",
           marginTop: 10,
-          paddingBottom: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          paddingVertical: 5,
         }}
       >
-        <MaterialCommunityIcons color="#111111" name="lock-outline" size={34} />
-        <TextInput
-          placeholder="Reenter Password"
-          style={styles.textInput}
-          selectionColor="#05375a"
-        />
-      </View>
+        <MaterialIcons name="image" size={24} color="white" />
+        <Text
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#52555B",
+            borderRadius: 5,
+            paddingLeft: 10,
+            paddingVertical: 7,
+            paddingRight: 13,
+            alignSelf: "center",
+            fontFamily: "SFUITextRegular",
+            fontSize: 14,
+            color: "#FFFFFF",
+          }}
+        >
+          Attach Profile Picture...
+        </Text>
+      </TouchableOpacity>
       <TouchableOpacity
         style={{
           width: 150,
@@ -269,7 +311,12 @@ const SignUpSecondScreen = () => {
           borderRadius: 10,
           paddingVertical: 10,
         }}
-        onPress={navigation.navigate("SignUpSecondScreen")}
+        onPress={() => {
+          if (platoon.length === 0) {
+            alert("Key in a platoon name.");
+          }
+          signUp({ ...route.params, platoon: platoon, profile: null });
+        }}
       >
         <Text
           style={{
