@@ -3,7 +3,8 @@
 ## Setting up the dev environment
 
 ```
-npm i
+yarn cache clean
+yarn install --update-checksums
 expo start
 ```
 
