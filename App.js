@@ -19,6 +19,9 @@ import RootStackScreen from "./screens/RootStackScreen";
 import { AuthContext } from "./components/Context";
 import * as SecureStore from "expo-secure-store";
 
+// Moment.js
+import moment from "moment";
+
 // Custom fonts + loading
 import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
@@ -91,12 +94,6 @@ export default function App() {
       signIn: async (userName, password) => {
         // replace user, pass and Alpha with the values from db
         if (userName === "user" && password === "pass") {
-          try {
-            await SecureStore.setItemAsync("notAUserName", userName);
-            await SecureStore.setItemAsync("notAPassword", password);
-          } catch (e) {
-            console.log(e);
-          }
           const pfp = { uri: "../../../../../../assets/pfpjpg.jpg" };
           const platoon = "Alpha";
           dispatch({
@@ -106,6 +103,12 @@ export default function App() {
             pfp: pfp,
             platoon: platoon,
           });
+          try {
+            await SecureStore.setItemAsync("notAUserName", userName);
+            await SecureStore.setItemAsync("notAPassword", password);
+          } catch (e) {
+            console.log(e);
+          }
         } else {
           alert("Invalid Credentials.");
         }
@@ -114,10 +117,10 @@ export default function App() {
         try {
           await SecureStore.deleteItemAsync("notAUserName");
           await SecureStore.deleteItemAsync("notAPassword");
+          console.log("removed stored creds");
         } catch (e) {
           console.log(e);
         }
-        console.log("removed stored creds");
         dispatch({ type: "LOGOUT" });
       },
       signUp: (userName, password, pfp, platoon) => {
@@ -151,62 +154,83 @@ export default function App() {
     }, 200);
   }, []);
 
-  // Items Syncing
   const itemsSync = useMemo(() => {
-    // const [localItems, setLocalItems] = useState([]);
-    // const [statusCode, setStatusCode] = useState("");
-    // return {
-    //   getItemsFromDatabase: () => {
-    //     return null;
-    //   },
-    //   postItemsToDatabase: () => {
-    //     return null;
-    //   },
-    // };
+    return {
+      localItems: [],
+      getItemsFromDatabase: (username, password) => {
+        // Simualation of fetch req
+        setTimeout(() => {
+          console.log(username, password);
+          const statusCode = "200";
+          const requestedItems = JSON.parse(
+            JSON.stringify([
+              {
+                title: "Physical Conditioning",
+                description: "Run 2.4km around the camp",
+                backgroundColor: "#ECDDFF",
+                borderColor: "#A361EB",
+                attachments: [{ me: "test" }], // array of objects
+                startDate: moment().add(20, "hour").toDate(),
+                endDate: moment().add(21, "hour").toDate(),
+              },
+            ])
+          );
+          if (statusCode == "200") {
+            itemsSync.localItems = requestedItems;
+            alert("Success get");
+          } else {
+            console.log("unsuccessful get from db");
+          }
+        }, 1000);
+      },
+      postItemsToDatabase: () => {
+        return null;
+      },
+    };
   }, []);
 
   // *The application*
   return loaded ? (
     <AuthContext.Provider value={authContext}>
-      {/* <ItemsContext.Provider value={itemsSync}> */}
-      <NavigationContainer>
-        {loginState.pfp !== null ? (
-          <Tab.Navigator
-            tabBar={(props) => <MyTabBar {...props} />}
-            initialRouteName="Home"
-            screenOptions={{
-              headerTitleAlign: "center",
-              headerStyle: { height: 70 },
-            }}
-          >
-            <Tab.Screen
-              name="Profile"
-              component={ProfileScreen}
-              options={{
-                title: "Profile",
-                headerShown: false,
+      <ItemsContext.Provider value={itemsSync}>
+        <NavigationContainer>
+          {loginState.pfp !== null ? (
+            <Tab.Navigator
+              tabBar={(props) => <MyTabBar {...props} />}
+              initialRouteName="Home"
+              screenOptions={{
+                headerTitleAlign: "center",
+                headerStyle: { height: 70 },
               }}
-            />
-            <Tab.Screen
-              name="Home"
-              component={HomeScreen}
-              options={{
-                tabBarLabel: "Calendar",
-                title: "",
-                headerShown: false,
-              }}
-            />
-            <Tab.Screen
-              name="Library"
-              component={LibraryScreen}
-              options={{ title: "library" }}
-            />
-          </Tab.Navigator>
-        ) : (
-          <RootStackScreen />
-        )}
-      </NavigationContainer>
-      {/* </ItemsContext.Provider> */}
+            >
+              <Tab.Screen
+                name="Profile"
+                component={ProfileScreen}
+                options={{
+                  title: "Profile",
+                  headerShown: false,
+                }}
+              />
+              <Tab.Screen
+                name="Home"
+                component={HomeScreen}
+                options={{
+                  tabBarLabel: "Calendar",
+                  title: "",
+                  headerShown: false,
+                }}
+              />
+              <Tab.Screen
+                name="Library"
+                component={LibraryScreen}
+                options={{ title: "library" }}
+              />
+            </Tab.Navigator>
+          ) : (
+            <RootStackScreen />
+          )}
+        </NavigationContainer>
+      </ItemsContext.Provider>
     </AuthContext.Provider>
   ) : (
     <AppLoading />

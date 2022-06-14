@@ -37,8 +37,7 @@ import MyItemCard from "../components/CalendarItem";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 // Caching and Backend Integration
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Cache } from "react-native-cache";
+import { ItemsContext } from "../components/ItemsContext";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 // UUID
@@ -76,8 +75,10 @@ export default function HomeScreen({ navigation }) {
 
 function CalendarScreen({ screenName, navigation, route }) {
   const window = useWindowDimensions();
+  const { getItemsFromDatabase, localItems } = React.useContext(ItemsContext);
 
   useEffect(() => {
+    getItemsFromDatabase("hello", "world");
     navigation.setOptions({
       title: "",
       headerRight: () => <AddEvent />,
@@ -89,55 +90,21 @@ function CalendarScreen({ screenName, navigation, route }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [items, setItems] = useState([]); // Backend stuff
 
-  // Problem
-  // const setCachedItems = async (key, object) => {
-  //   console.log(`Putting in ${JSON.stringify(object)}`);
-  //   await cache.set(key, JSON.stringify(object));
-  // };
+  useEffect(() => {
+    setItems(localItems);
+  }, [localItems]);
 
-  // const getCachedItems = async (key) => {
-  //   let JSONValue = await cache.get(key);
-  //   if (JSONValue !== null) {
-  //     console.log(`Getting in ${JSON.parse(JSONValue)}`);
-  //     // setItems(JSON.parse(JSONValue));
-  //     console.log(items);
-  //   } else {
-  //     setCachedItems(
-  //       "cachedItems",
-  //       JSON.stringify([
-  //         {
-  //           title: "Physical Conditioning",
-  //           description: "Run 2.4km around the camp",
-  //           backgroundColor: "#ECDDFF",
-  //           borderColor: "#A361EB",
-  //           attachments: [{ me: "test" }], // array of objects
-  //           startDate: moment().add(20, "hour").toDate(),
-  //           endDate: moment().add(21, "hour").toDate(),
-  //         },
-  //       ])
-  //     );
-  //   }
-  // };
-
-  // TODO: remove before production
-  // useEffect(() => {
-  //   // console.log(items);
-  //   // getCachedItems("cachedItems");
-  //   // setCachedItems(
-  //   //   "cachedItems",
-  //   //   JSON.stringify([
-  //   //     {
-  //   //       title: "Physical Conditioning",
-  //   //       description: "Run 2.4km around the camp",
-  //   //       backgroundColor: "#ECDDFF",
-  //   //       borderColor: "#A361EB",
-  //   //       attachments: [{ me: "test" }], // array of objects
-  //   //       startDate: moment().add(20, "hour").toDate(),
-  //   //       endDate: moment().add(21, "hour").toDate(),
-  //   //     },
-  //   //   ])
-  //   // );
-  // }, [screenName]);
+  useEffect(() => {
+    console.log(`items are ${JSON.stringify(items)}`);
+    setMarkedDates(
+      items.map((element, index) => {
+        return {
+          date: moment(element.startDate),
+          dots: [{ color: element.borderColor }],
+        };
+      })
+    );
+  }, [items]);
 
   // Turn into get request
   useFocusEffect(
@@ -200,10 +167,10 @@ function CalendarScreen({ screenName, navigation, route }) {
             duration: 400,
           }}
           // Scroll
+          scrollable
           scrollToOnSetSelectedDate={false}
           selectedDate={currentDate}
           scrollerPaging
-          scrollable
           // Array of whitelisted dates with moment()
           // datesWhitelist={datesWhitelist}
           // datesBlacklist={datesBlacklist}
@@ -221,7 +188,6 @@ function CalendarScreen({ screenName, navigation, route }) {
           }}
           calendarHeaderFormat={"MMMM, YYYY"}
           calendarColor={"#FcFcFc"} // bg color
-          // Number and day of week formatting
           dateNumberStyle={styles.dateNumberStyle}
           dateNameStyle={styles.dateNameStyle}
           highlightDateNameStyle={[
@@ -262,7 +228,6 @@ function CalendarScreen({ screenName, navigation, route }) {
           onDateSelected={(date) => {
             setCurrentDate(date.toDate());
           }}
-          // onWeekChanged={console.log("week changed")}
         />
       </View>
       <ScrollView style={{ top: 84, marginBottom: 109 }}>
@@ -642,8 +607,6 @@ function AddEventScreen() {
 //       );
 //     }
 //     // push all the marks to the calendar
-//     console.log("pushing new marks");
-//     console.log(...newDates);
 //     setMarkedDates([...markedDates, ...newDates]);
 //   }
 // }

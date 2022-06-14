@@ -18,6 +18,7 @@ export default function MyItemCard({
   currentPage,
 }) {
   const navigation = useNavigation(item);
+  let x, y, width, height;
 
   return (
     <TouchableOpacity
@@ -30,7 +31,6 @@ export default function MyItemCard({
         borderLeftWidth: 5,
         paddingLeft: 5,
         paddingTop: 5,
-        paddingRight: 7,
         justifyContent: "space-between",
         alignItems: "stretch",
         flexDirection: "row",
@@ -42,13 +42,18 @@ export default function MyItemCard({
         currentPage;
       }}
     >
-      <View style={{ flex: 1 }}>
-        <Text style={styles.calendarTitle}>{item.title}</Text>
+      <View style={{ flex: 3 }}>
+        <Text style={styles.calendarTitle} numberOfLines={1}>
+          {item.title}
+        </Text>
         <Text style={styles.calendarDescription} numberOfLines={1}>
           {item.description}
         </Text>
       </View>
-      <CalendarAttachment attachments={item.attachments} />
+      <View>
+        {width > 2000 ? <></> : <></>}
+        <CalendarAttachment attachments={item.attachments} />
+      </View>
     </TouchableOpacity>
   );
 }

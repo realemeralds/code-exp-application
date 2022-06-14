@@ -16,6 +16,7 @@ import { useFonts } from "expo-font";
 
 const SignInScreen = () => {
   const { signIn } = React.useContext(AuthContext);
+
   const [loaded] = useFonts({
     SFUITextRegular: require("../assets/fonts/SFUITextRegular.otf"),
     SFProTextLight: require("../assets/fonts/SFProTextLight.otf"),

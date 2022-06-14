@@ -14,11 +14,11 @@ export default function CalendarAttachment({ attachments }) {
       <View
         style={{
           flexDirection: "row",
-          justifyContent: "center",
+          justifyContent: "flex-end",
           alignItems: "center",
           marginTop: -5,
-          paddingLeft: 3,
-          flex: 1,
+          marginEnd: 10,
+          flex: 2,
         }}
       >
         <Ionicons name="attach-sharp" size={20} color="black" />
