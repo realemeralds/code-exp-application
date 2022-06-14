@@ -23,6 +23,9 @@ import * as SecureStore from "expo-secure-store";
 import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
 
+// Items Context
+import { ItemsContext } from "./components/ItemsContext";
+
 export default function App() {
   const [loaded] = useFonts({
     SFUITextRegular: require("./assets/fonts/SFUITextRegular.otf"),
@@ -83,8 +86,6 @@ export default function App() {
 
   // BACKEND CODE HERE
   // BACKEND CODE HERE
-  // BACKEND CODE HERE
-  // BACKEND CODE HERE
   const authContext = useMemo(() => {
     return {
       signIn: async (userName, password) => {
@@ -96,8 +97,8 @@ export default function App() {
           } catch (e) {
             console.log(e);
           }
-          pfp = { uri: "../../../../../../assets/pfpjpg.jpg" };
-          platoon = "Alpha";
+          const pfp = { uri: "../../../../../../assets/pfpjpg.jpg" };
+          const platoon = "Alpha";
           dispatch({
             type: "LOGIN",
             id: userName,
@@ -131,7 +132,7 @@ export default function App() {
     };
   }, []);
 
-  // Check for token in SecureStore
+  // Check for token in SecureStore and sync localItems
   useEffect(() => {
     setTimeout(async () => {
       try {
@@ -150,9 +151,24 @@ export default function App() {
     }, 200);
   }, []);
 
+  // Items Syncing
+  const itemsSync = useMemo(() => {
+    // const [localItems, setLocalItems] = useState([]);
+    // const [statusCode, setStatusCode] = useState("");
+    // return {
+    //   getItemsFromDatabase: () => {
+    //     return null;
+    //   },
+    //   postItemsToDatabase: () => {
+    //     return null;
+    //   },
+    // };
+  }, []);
+
   // *The application*
   return loaded ? (
     <AuthContext.Provider value={authContext}>
+      {/* <ItemsContext.Provider value={itemsSync}> */}
       <NavigationContainer>
         {loginState.pfp !== null ? (
           <Tab.Navigator
@@ -190,6 +206,7 @@ export default function App() {
           <RootStackScreen />
         )}
       </NavigationContainer>
+      {/* </ItemsContext.Provider> */}
     </AuthContext.Provider>
   ) : (
     <AppLoading />
