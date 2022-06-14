@@ -210,6 +210,47 @@ const styles = StyleSheet.create({
     color: "#575050",
     marginTop: 10,
   },
+  statusTitle: {
+    fontFamily: "SFProTextSemibold",
+    fontSize: 16,
+    color: "#FFF",
+    marginLeft: 10,
+  },
+  statusDescription: {
+    fontFamily: "SFProTextLight",
+    marginTop: -3,
+    fontSize: 12,
+    color: "#FFF",
+    marginLeft: 10,
+  },
+  statusContainer: {
+    paddingRight: 20,
+    alignSelf: "center",
+    position: "relative",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  signInContainer: {
+    flex: 1,
+    alignItems: "flex-start",
+    justifyContent: "center",
+    paddingHorizontal: 45,
+  },
+  signInTextInput: {
+    flex: 1,
+    marginTop: Platform.OS === "ios" ? 10 : -2,
+    marginLeft: 12,
+    color: "#05375a",
+    borderBottomColor: "#6E6C78",
+    borderBottomWidth: 1,
+    paddingHorizontal: -3,
+    marginRight: 20,
+    fontFamily: "SFProTextMedium",
+    fontSize: 14,
+    color: "#111111",
+    paddingTop: 4,
+    marginBottom: 10,
+  },
 });
 
 export default styles;

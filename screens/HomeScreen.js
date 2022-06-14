@@ -45,6 +45,9 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 const { v4: uuidv4, v4 } = require("uuid");
 import "react-native-get-random-values";
 
+// TODO: remove
+import { showMessage, hideMessage } from "react-native-flash-message";
+
 const Stack = createStackNavigator();
 
 export default function HomeScreen({ navigation }) {
@@ -122,6 +125,17 @@ function CalendarScreen({ screenName, navigation, route }) {
           event.endDate = moment(event.endDate, "DD-MM-YYYY HH:mm").toDate();
           setItems([...items, event]);
         }
+        showMessage({
+          message: "Success!",
+          description: "Created new event",
+          type: "success",
+          position: "bottom",
+          titleStyle: styles.statusTitle,
+          textStyle: styles.statusDescription,
+          style: styles.statusContainer,
+          floating: true,
+          icon: "auto",
+        });
         route.params = undefined;
       }
     }, [route])
