@@ -1,5 +1,5 @@
 // Basic react components
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 // React Navigation + Icons
 import { NavigationContainer } from "@react-navigation/native";
@@ -10,9 +10,6 @@ import MyTabBar from "./components/CustomTabBar";
 import HomeScreen from "./screens/HomeScreen";
 import LibraryScreen from "./screens/LibraryScreen";
 import ProfileScreen from "./screens/ProfileScreen";
-
-// Tab Navigator
-const Tab = createBottomTabNavigator();
 
 // Login implementation
 import LoginRootScreen from "./screens/LoginRootScreen";
@@ -34,7 +31,16 @@ import styles from "./styles";
 // moment.js
 import moment from "moment";
 
+// Tab Navigator
+const Tab = createBottomTabNavigator();
+
 export default function App() {
+  // To fix the useEffect() hook
+  const [loading, setLoading] = useState(true);
+  setTimeout(() => {
+    setLoading(false);
+  }, 200);
+
   const [loaded] = useFonts({
     SFUITextRegular: require("./assets/fonts/SFUITextRegular.otf"),
     SFProTextLight: require("./assets/fonts/SFProTextLight.otf"),
@@ -55,6 +61,7 @@ export default function App() {
     try {
       await SecureStore.setItemAsync("notAUserName", userName);
       await SecureStore.setItemAsync("notAPassword", password);
+      console.log("stored cred in cache");
     } catch (e) {
       console.log(e);
     }
@@ -107,8 +114,6 @@ export default function App() {
     initalLoginState
   );
 
-  // BACKEND CODE HERE
-  // BACKEND CODE HERE
   const authContext = useMemo(() => {
     return {
       loginState: loginState,
@@ -238,36 +243,6 @@ export default function App() {
     };
   }, [loginState]);
 
-  // Check for token in SecureStore and sync localItems
-  useEffect(() => {
-    async () => {
-      try {
-        const parsedUsername = await SecureStore.getItemAsync("notAUserName");
-        const parsedPassword = await SecureStore.getItemAsync("notAPassword");
-        if (parsedPassword !== null && parsedUsername !== null) {
-          showMessage({
-            message: "Logged in",
-            description: "with cached credentials",
-            type: "success",
-            position: "bottom",
-            titleStyle: styles.statusTitle,
-            textStyle: styles.statusDescription,
-            style: styles.statusContainer,
-            floating: true,
-            icon: "auto",
-          });
-          dispatch({
-            type: "LOGIN",
-            id: parsedUsername,
-            password: parsedPassword,
-          });
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    };
-  }, []);
-
   const itemsSync = useMemo(() => {
     return {
       localItems: [],
@@ -365,6 +340,39 @@ export default function App() {
           });
         }
       },
+    };
+  }, [loading]);
+
+  // Check for token in SecureStore and sync localItems
+  useEffect(() => {
+    async () => {
+      console.log("started");
+      try {
+        const parsedUsername = await SecureStore.getItemAsync("notAUserName");
+        const parsedPassword = await SecureStore.getItemAsync("notAPassword");
+        console.log(parsedUsername, parsedPassword);
+        if (parsedPassword !== null && parsedUsername !== null) {
+          showMessage({
+            message: "Logged in",
+            description: "with cached credentials",
+            type: "success",
+            position: "bottom",
+            titleStyle: styles.statusTitle,
+            textStyle: styles.statusDescription,
+            style: styles.statusContainer,
+            floating: true,
+            icon: "auto",
+          });
+          dispatch({
+            type: "LOGIN",
+            id: parsedUsername,
+            password: parsedPassword,
+          });
+        }
+      } catch (e) {
+        console.log("error");
+        console.log(e);
+      }
     };
   }, []);
 
