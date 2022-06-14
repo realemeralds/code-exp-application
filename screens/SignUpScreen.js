@@ -1,3 +1,4 @@
+// Basic React components
 import React, { useState } from "react";
 import {
   View,
@@ -9,6 +10,8 @@ import {
   Platform,
   TouchableOpacity,
 } from "react-native";
+
+// Custom Icons
 import {
   MaterialCommunityIcons,
   MaterialIcons,
@@ -19,7 +22,7 @@ import {
 import { useFonts } from "expo-font";
 import AppLoading from "expo-app-loading";
 
-// React Navigation + Icons
+// React Navigation
 import { createStackNavigator } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 
@@ -27,16 +30,22 @@ import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../components/Context";
 const Stack = createStackNavigator();
 
+// Flashbars
+import { showMessage } from "react-native-flash-message";
+
+// Stylesheet
+import styles from "../styles";
+
 const SignUpScreen = () => {
-  // const [loaded] = useFonts({
-  //   SFUITextRegular: require("../assets/fonts/SFUITextRegular.otf"),
-  //   SFProTextLight: require("../assets/fonts/SFProTextLight.otf"),
-  //   SFProTextMedium: require("../assets/fonts/SFProTextMedium.otf"),
-  //   SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
-  // });
+  const [loaded] = useFonts({
+    SFUITextRegular: require("../assets/fonts/SFUITextRegular.otf"),
+    SFProTextLight: require("../assets/fonts/SFProTextLight.otf"),
+    SFProTextMedium: require("../assets/fonts/SFProTextMedium.otf"),
+    SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
+  });
 
   // Update the header when loaded, including the add event and search event stuff
-  return loaded ? (
+  return (
     <Stack.Navigator
       screenOptions={{
         header: () => <></>,
@@ -46,8 +55,6 @@ const SignUpScreen = () => {
       <Stack.Screen name="SignUpFirstScreen" component={SignUpFirstScreen} />
       <Stack.Screen name="SignUpSecondScreen" component={SignUpSecondScreen} />
     </Stack.Navigator>
-  ) : (
-    <AppLoading />
   );
 };
 
@@ -67,7 +74,7 @@ const SignUpFirstScreen = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   return (
-    <View style={styles.container}>
+    <View style={styles.signInContainer}>
       <Image
         style={{
           height: 150,
@@ -113,7 +120,7 @@ const SignUpFirstScreen = () => {
           placeholderTextColor={"#86848C"}
           onChangeText={setUsername}
           value={username}
-          style={styles.textInput}
+          style={styles.signInTextInput}
           selectionColor="#05375a"
           maxLength={40}
         />
@@ -131,7 +138,7 @@ const SignUpFirstScreen = () => {
         <MaterialIcons name="lock" size={34} color="#111111" />
         <TextInput
           placeholder="Password"
-          style={styles.textInput}
+          style={styles.signInTextInput}
           onChangeText={setPassword}
           value={password}
           selectionColor="#05375a"
@@ -152,7 +159,7 @@ const SignUpFirstScreen = () => {
         <MaterialCommunityIcons color="#111111" name="lock-outline" size={34} />
         <TextInput
           placeholder="Reenter Password"
-          style={styles.textInput}
+          style={styles.signInTextInput}
           selectionColor="#05375a"
           secureTextEntry={true}
           onChangeText={setConfirmPassword}
@@ -179,13 +186,46 @@ const SignUpFirstScreen = () => {
             username.length === 0 ||
             confirmPassword.length === 0
           ) {
-            alert("Please fill in all fields.");
+            showMessage({
+              message: "Insufficient Data",
+              description: "Please make sure to fill up all fields",
+              type: "warning",
+              position: "bottom",
+              titleStyle: styles.statusTitle,
+              textStyle: styles.statusDescription,
+              style: [styles.statusContainer, { bottom: 10 }],
+              floating: true,
+              icon: "auto",
+              autoHide: false,
+            });
             return;
           } else if (password !== confirmPassword) {
-            alert("Passwords do not match, please key in again.");
+            showMessage({
+              message: "Passwords do not match.",
+              description: "Please key in again",
+              type: "danger",
+              position: "bottom",
+              titleStyle: styles.statusTitle,
+              textStyle: styles.statusDescription,
+              style: [styles.statusContainer, { bottom: 10 }],
+              floating: true,
+              icon: "auto",
+              autoHide: false,
+            });
             return;
           } else if (password.length < 8) {
-            alert("Password must be at least 8 characters long");
+            showMessage({
+              message: "Password too weak",
+              description: "Make sure it is at least 8 characters long",
+              type: "warning",
+              position: "bottom",
+              titleStyle: styles.statusTitle,
+              textStyle: styles.statusDescription,
+              style: [styles.statusContainer, { bottom: 10 }],
+              floating: true,
+              icon: "auto",
+              autoHide: false,
+            });
             return;
           }
           navigation.navigate("SignUpSecondScreen", {
@@ -210,12 +250,12 @@ const SignUpFirstScreen = () => {
 
 const SignUpSecondScreen = ({ route }) => {
   const { signUp } = React.useContext(AuthContext);
-  const navigation = useNavigation();
 
   const [platoon, setPlatoon] = useState("");
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.signInContainer}>
       <Image
         style={{
           height: 150,
@@ -262,7 +302,7 @@ const SignUpSecondScreen = ({ route }) => {
         <TextInput
           placeholder="Platoon"
           placeholderTextColor={"#86848C"}
-          style={styles.textInput}
+          style={styles.signInTextInput}
           selectionColor="#05375a"
           onChangeText={setPlatoon}
           value={platoon}
@@ -315,15 +355,30 @@ const SignUpSecondScreen = ({ route }) => {
           borderRadius: 10,
           paddingVertical: 10,
         }}
+        disabled={buttonDisabled}
         onPress={() => {
           if (platoon.length === 0) {
-            alert("Key in a platoon name.");
+            showMessage({
+              message: "Fields empty:",
+              description: "Key in a platoon name.",
+              type: "warning",
+              position: "bottom",
+              titleStyle: styles.statusTitle,
+              textStyle: styles.statusDescription,
+              style: [styles.statusContainer, { bottom: 10 }],
+              floating: true,
+              icon: "auto",
+              autoHide: false,
+            });
+            return;
           }
+          setButtonDisabled(true);
           signUp({
             ...route.params,
             platoon: platoon,
             pfp: { uri: "../../../../../../assets/pfpjpg.jpg" },
           });
+          setButtonDisabled(false);
         }}
       >
         <Text
@@ -341,27 +396,3 @@ const SignUpSecondScreen = ({ route }) => {
 };
 
 export default SignUpScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "flex-start",
-    justifyContent: "center",
-    paddingHorizontal: 45,
-  },
-  textInput: {
-    flex: 1,
-    marginTop: Platform.OS === "ios" ? 10 : -2,
-    marginLeft: 12,
-    color: "#05375a",
-    borderBottomColor: "#6E6C78",
-    borderBottomWidth: 1,
-    paddingHorizontal: -3,
-    marginRight: 20,
-    fontFamily: "SFProTextMedium",
-    fontSize: 14,
-    color: "#111111",
-    paddingTop: 4,
-    marginBottom: 10,
-  },
-});

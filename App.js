@@ -29,6 +29,11 @@ import { useFonts } from "expo-font";
 // Items Context
 import { ItemsContext } from "./components/ItemsContext";
 
+// Flashbars
+import FlashMessage from "react-native-flash-message";
+import { showMessage } from "react-native-flash-message";
+import styles from "./styles";
+
 export default function App() {
   const [loaded] = useFonts({
     SFUITextRegular: require("./assets/fonts/SFUITextRegular.otf"),
@@ -39,10 +44,20 @@ export default function App() {
   });
 
   const initalLoginState = {
+    isLoading: false,
     userName: null,
     password: null,
     pfp: null,
     platoon: null,
+  };
+
+  const storeLoginInCache = async (userName, password) => {
+    try {
+      await SecureStore.setItemAsync("notAUserName", userName);
+      await SecureStore.setItemAsync("notAPassword", password);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const loginReducer = (prevState, action) => {
@@ -51,6 +66,7 @@ export default function App() {
         console.log("Successfully retrieved creds");
         return {
           ...prevState,
+          isLoading: true,
           userName: action.id,
           password: action.password,
         };
@@ -58,6 +74,7 @@ export default function App() {
         console.log("Successfully logged in");
         return {
           ...prevState,
+          isLoading: true,
           userName: action.id,
           password: action.password,
           platoon: action.platoon,
@@ -67,6 +84,7 @@ export default function App() {
         console.log("Successfully logged out.");
         return {
           ...prevState,
+          isLoading: false,
           userName: null,
           password: null,
           pfp: null,
@@ -76,6 +94,7 @@ export default function App() {
         console.log("Successfully registered.");
         return {
           ...prevState,
+          isLoading: true,
           userName: action.id,
           password: action.password,
           pfp: action.pfp,
@@ -92,11 +111,51 @@ export default function App() {
   // BACKEND CODE HERE
   const authContext = useMemo(() => {
     return {
+      loginState: loginState,
       signIn: async (userName, password) => {
-        // replace user, pass and Alpha with the values from db
-        if (userName === "user" && password === "pass") {
-          const pfp = { uri: "../../../../../../assets/pfpjpg.jpg" };
-          const platoon = "Alpha";
+        const queryBody = JSON.stringify({
+          username: userName,
+          password: password,
+        });
+        // status message
+        if (typeof loading === "undefined") {
+          var loadingLogin = true;
+        } else {
+          loadingLogin = true;
+        }
+        // for deactivating the button
+        setTimeout(() => {
+          if (loadingLogin) {
+            showMessage({
+              message: "Wait a bit...",
+              description: "getting data from server",
+              type: "info",
+              position: "bottom",
+              titleStyle: styles.statusTitle,
+              textStyle: styles.statusDescription,
+              style: [styles.statusContainer, { bottom: 10 }],
+              floating: true,
+              icon: "auto",
+              autoHide: false,
+            });
+          }
+        }, 200);
+
+        const res = await fetch("https://code-exp-2022.herokuapp.com/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: queryBody, // dummy username and password (should recieve 200)
+        });
+        console.log(res.status); // 503 status code recieved
+        if (res.status == 200) {
+          loadingLogin = false;
+          const platoonArray = ["Alpha", "Beta", "Gamma", "Theta", "Mu", "Nu"];
+          // ["alice", "bob", "charlie", "realemeralds", "casper", "matthew"]
+          const pfp = { uri: `../../../../../../assets/${userName}.jpg` };
+          const platoon =
+            platoonArray[Math.floor(Math.random() * platoonArray.length)];
           dispatch({
             type: "LOGIN",
             id: userName,
@@ -104,14 +163,31 @@ export default function App() {
             pfp: pfp,
             platoon: platoon,
           });
-          try {
-            await SecureStore.setItemAsync("notAUserName", userName);
-            await SecureStore.setItemAsync("notAPassword", password);
-          } catch (e) {
-            console.log(e);
-          }
+          showMessage({
+            message: "Logged in!",
+            description: "credentials cached securely",
+            type: "success",
+            position: "bottom",
+            titleStyle: styles.statusTitle,
+            textStyle: styles.statusDescription,
+            style: styles.statusContainer,
+            floating: true,
+            icon: "auto",
+          });
+          storeLoginInCache(userName, password);
         } else {
-          alert("Invalid Credentials.");
+          showMessage({
+            message: "Credentials Incorrect",
+            description: "username and password do not match",
+            type: "danger",
+            position: "bottom",
+            titleStyle: styles.statusTitle,
+            textStyle: styles.statusDescription,
+            style: [styles.statusContainer, { bottom: 10 }],
+            floating: true,
+            icon: "danger",
+            autoHide: false,
+          });
         }
       },
       signOut: async () => {
@@ -124,25 +200,85 @@ export default function App() {
         }
         dispatch({ type: "LOGOUT" });
       },
-      signUp: (userName, password, pfp, platoon) => {
-        dispatch({
-          type: "REGISTER",
-          id: userName,
+      signUp: async (userName, password, pfp, platoon) => {
+        console.log(userName, password, pfp, platoon);
+        const queryBody = JSON.stringify({
+          username: userName,
           password: password,
-          pfp: pfp,
-          platoon: platoon,
         });
+        console.log("Signing up...");
+        const res = await fetch(
+          "https://code-exp-2022.herokuapp.com/register",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: queryBody, // dummy username and password (should recieve 200)
+          }
+        );
+        console.log(res.status);
+        if (res.status == 200) {
+          try {
+            await SecureStore.setItemAsync("notAUserName", userName);
+            await SecureStore.setItemAsync("notAPassword", password);
+          } catch (e) {
+            console.log(e);
+          }
+          dispatch({
+            type: "REGISTER",
+            id: userName,
+            password: password,
+            pfp: pfp,
+            platoon: platoon,
+          });
+          showMessage({
+            message: "Successfully registered!",
+            description: "credentials cached securely",
+            type: "success",
+            position: "bottom",
+            titleStyle: styles.statusTitle,
+            textStyle: styles.statusDescription,
+            style: styles.statusContainer,
+            floating: true,
+            icon: "auto",
+          });
+        } else {
+          showMessage({
+            message: "Registration failed",
+            description: "try again in a few minutes",
+            type: "danger",
+            position: "bottom",
+            titleStyle: styles.statusTitle,
+            textStyle: styles.statusDescription,
+            style: [styles.statusContainer, { bottom: 10 }],
+            floating: true,
+            icon: "danger",
+            autoHide: false,
+          });
+        }
       },
     };
-  }, []);
+  }, [loginState]);
 
   // Check for token in SecureStore and sync localItems
   useEffect(() => {
-    setTimeout(async () => {
+    async () => {
       try {
         const parsedUsername = await SecureStore.getItemAsync("notAUserName");
         const parsedPassword = await SecureStore.getItemAsync("notAPassword");
         if (parsedPassword !== null && parsedUsername !== null) {
+          showMessage({
+            message: "Logged in",
+            description: "with cached credentials",
+            type: "success",
+            position: "bottom",
+            titleStyle: styles.statusTitle,
+            textStyle: styles.statusDescription,
+            style: styles.statusContainer,
+            floating: true,
+            icon: "auto",
+          });
           dispatch({
             type: "LOGIN",
             id: parsedUsername,
@@ -152,7 +288,7 @@ export default function App() {
       } catch (e) {
         console.log(e);
       }
-    }, 200);
+    };
   }, []);
 
   const itemsSync = useMemo(() => {
@@ -230,6 +366,7 @@ export default function App() {
             <LoginRootScreen />
           )}
         </NavigationContainer>
+        <FlashMessage position="top" />
       </ItemsContext.Provider>
     </AuthContext.Provider>
   ) : (

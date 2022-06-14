@@ -11,17 +11,20 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Authentication
 import { AuthContext } from "../components/Context";
+import { showMessage } from "react-native-flash-message";
 
-import { useFonts } from "expo-font";
+// Stylesheet
+import styles from "../styles";
 
 const SignInScreen = () => {
   const { signIn } = React.useContext(AuthContext);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.signInContainer}>
       <Image
         style={{
           height: 250,
@@ -67,11 +70,10 @@ const SignInScreen = () => {
         <TextInput
           placeholder="Username"
           placeholderTextColor={"#86848C"}
-          style={styles.textInput}
+          style={styles.signInTextInput}
           selectionColor="#05375a"
           value={username}
           onChangeText={setUsername}
-          autoFocus
           maxLength={40}
         />
       </View>
@@ -93,7 +95,7 @@ const SignInScreen = () => {
         <TextInput
           placeholder="Password"
           placeholderTextColor={"#86848C"}
-          style={styles.textInput}
+          style={styles.signInTextInput}
           selectionColor="#05375a"
           secureTextEntry
           value={password}
@@ -113,15 +115,34 @@ const SignInScreen = () => {
           borderRadius: 10,
           paddingVertical: 10,
         }}
+        disabled={buttonDisabled}
+        onPress={() => {
+          if (username !== "" && password !== "") {
+            console.log("pressed!");
+            setButtonDisabled(true);
+            signIn(username, password);
+            setButtonDisabled(false);
+          } else {
+            showMessage({
+              message: "Insufficient Data",
+              description: "Please make sure to fill up all fields",
+              type: "warning",
+              position: "bottom",
+              titleStyle: styles.statusTitle,
+              textStyle: styles.statusDescription,
+              style: [styles.statusContainer, { bottom: 10 }],
+              floating: true,
+              icon: "auto",
+              autoHide: false,
+            });
+          }
+        }}
       >
         <Text
           style={{
             fontFamily: "SFProTextLight",
             fontSize: 20,
             color: "#FFFFFF",
-          }}
-          onPress={() => {
-            signIn(username, password);
           }}
         >
           Continue
@@ -132,27 +153,3 @@ const SignInScreen = () => {
 };
 
 export default SignInScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "flex-start",
-    justifyContent: "center",
-    paddingHorizontal: 45,
-  },
-  textInput: {
-    flex: 1,
-    marginTop: Platform.OS === "ios" ? 10 : -2,
-    marginLeft: 12,
-    color: "#05375a",
-    borderBottomColor: "#6E6C78",
-    borderBottomWidth: 1,
-    paddingHorizontal: -3,
-    marginRight: 20,
-    fontFamily: "SFProTextMedium",
-    fontSize: 14,
-    color: "#111111",
-    paddingTop: 4,
-    marginBottom: 10,
-  },
-});
