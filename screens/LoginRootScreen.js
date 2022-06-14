@@ -8,7 +8,7 @@ import SignUpScreen from "./SignUpScreen";
 
 const RootStack = createStackNavigator();
 
-const RootStackScreen = ({ navigation }) => {
+const LoginRootScreen = ({ navigation }) => {
   return (
     <RootStack.Navigator screenOptions={{ headerShown: false }}>
       <RootStack.Screen name="SplashScreen" component={LoginSplashScreen} />
@@ -18,4 +18,4 @@ const RootStackScreen = ({ navigation }) => {
   );
 };
 
-export default RootStackScreen;
+export default LoginRootScreen;

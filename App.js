@@ -15,7 +15,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 const Tab = createBottomTabNavigator();
 
 // Login implementation
-import RootStackScreen from "./screens/RootStackScreen";
+import LoginRootScreen from "./screens/LoginRootScreen";
 import { AuthContext } from "./components/Context";
 import * as SecureStore from "expo-secure-store";
 
@@ -35,6 +35,7 @@ export default function App() {
     SFProTextLight: require("./assets/fonts/SFProTextLight.otf"),
     SFProTextMedium: require("./assets/fonts/SFProTextMedium.otf"),
     SFProTextSemibold: require("./assets/fonts/SFProTextSemibold.otf"),
+    SFProDisplayMedium: require("./assets/fonts/SFProDisplayMedium.otf"),
   });
 
   const initalLoginState = {
@@ -177,7 +178,6 @@ export default function App() {
           );
           if (statusCode == "200") {
             itemsSync.localItems = requestedItems;
-            alert("Success get");
           } else {
             console.log("unsuccessful get from db");
           }
@@ -223,11 +223,11 @@ export default function App() {
               <Tab.Screen
                 name="Library"
                 component={LibraryScreen}
-                options={{ title: "library" }}
+                options={{ headerShown: false }}
               />
             </Tab.Navigator>
           ) : (
-            <RootStackScreen />
+            <LoginRootScreen />
           )}
         </NavigationContainer>
       </ItemsContext.Provider>

@@ -17,14 +17,6 @@ import { useFonts } from "expo-font";
 const SignInScreen = () => {
   const { signIn } = React.useContext(AuthContext);
 
-  const [loaded] = useFonts({
-    SFUITextRegular: require("../assets/fonts/SFUITextRegular.otf"),
-    SFProTextLight: require("../assets/fonts/SFProTextLight.otf"),
-    SFProTextMedium: require("../assets/fonts/SFProTextMedium.otf"),
-    SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
-    SFProDisplayMedium: require("../assets/fonts/SFProDisplayMedium.otf"),
-  });
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -79,6 +71,8 @@ const SignInScreen = () => {
           selectionColor="#05375a"
           value={username}
           onChangeText={setUsername}
+          autoFocus
+          maxLength={40}
         />
       </View>
       <View
@@ -104,6 +98,7 @@ const SignInScreen = () => {
           secureTextEntry
           value={password}
           onChangeText={setPassword}
+          maxLength={40}
         />
       </View>
       <TouchableOpacity

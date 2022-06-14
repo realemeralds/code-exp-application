@@ -1,9 +1,10 @@
+import { useState } from "react";
 import styles from "../styles";
 import { Ionicons } from "@expo/vector-icons";
 import { View, Text } from "react-native";
 import { useFonts } from "expo-font";
 
-export default function CalendarAttachment({ attachments }) {
+export default function CalendarAttachment({ attachments, attachmentsShown }) {
   const [loaded] = useFonts({
     SFUITextRegular: require("../assets/fonts/SFUITextRegular.otf"),
     SFProTextLight: require("../assets/fonts/SFProTextLight.otf"),
@@ -22,10 +23,14 @@ export default function CalendarAttachment({ attachments }) {
         }}
       >
         <Ionicons name="attach-sharp" size={20} color="black" />
-        <Text style={styles.calendarAttachment}>
-          {Object.keys(attachments).length} attachment
-          {attachments.length > 1 ? "s" : ""}
-        </Text>
+        {attachmentsShown ? (
+          <Text style={styles.calendarAttachment}>
+            {Object.keys(attachments).length} attachment
+            {attachments.length > 1 ? "s" : ""}
+          </Text>
+        ) : (
+          <></>
+        )}
       </View>
     );
   } else {

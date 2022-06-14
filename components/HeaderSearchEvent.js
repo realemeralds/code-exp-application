@@ -9,9 +9,6 @@ export default function SearchEvent() {
         justifyContent: "space-between",
         marginLeft: 22,
       }}
-      onPress={() => {
-        console.log(items);
-      }}
     >
       <MaterialIcons name="search" size={30} color="black" />
       <Text
