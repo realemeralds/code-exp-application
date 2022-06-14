@@ -71,7 +71,6 @@ const SignInScreen = () => {
           selectionColor="#05375a"
           value={username}
           onChangeText={setUsername}
-          autoFocus
           maxLength={40}
         />
       </View>
