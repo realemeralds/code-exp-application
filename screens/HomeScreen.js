@@ -1,15 +1,12 @@
 // Basic styles and components
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useContext } from "react";
 import {
   View,
-  AppRegistry,
   Text,
   TouchableOpacity,
-  Image,
   ScrollView,
   StyleSheet,
   useWindowDimensions,
-  Button,
 } from "react-native";
 import styles from "../styles";
 
@@ -36,6 +33,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 // Caching and Backend Integration
 import { ItemsContext } from "../components/ItemsContext";
+import { AuthContext } from "../components/Context";
 
 // Navigation
 import { createStackNavigator } from "@react-navigation/stack";
@@ -44,9 +42,6 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 // UUID
 const { v4: uuidv4, v4 } = require("uuid");
 import "react-native-get-random-values";
-
-// TODO: remove
-import { showMessage, hideMessage } from "react-native-flash-message";
 
 const Stack = createStackNavigator();
 
@@ -80,10 +75,14 @@ export default function HomeScreen({ navigation }) {
 
 function CalendarScreen({ screenName, navigation, route }) {
   const window = useWindowDimensions();
-  const { getItemsFromDatabase, localItems } = React.useContext(ItemsContext);
 
+  // Get contexts
+  const { getItemsFromDatabase, postItemsToDatabase, localItems } =
+    React.useContext(ItemsContext);
+  const { loginState } = useContext(AuthContext);
+
+  // Set headerbar
   useEffect(() => {
-    getItemsFromDatabase("hello", "world");
     navigation.setOptions({
       title: "",
       headerRight: () => <AddEvent />,
@@ -93,13 +92,14 @@ function CalendarScreen({ screenName, navigation, route }) {
 
   // This is timetable functionality
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [items, setItems] = useState([]); // Backend stuff
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     setItems(localItems);
   }, [localItems]);
 
   useEffect(() => {
+    getItemsFromDatabase(loginState.userName, loginState.password);
     console.log(`items are ${JSON.stringify(items)}`);
     setMarkedDates(
       items.map((element) => {
@@ -112,45 +112,18 @@ function CalendarScreen({ screenName, navigation, route }) {
     );
   }, [items]);
 
-  // Turn into get request
   useFocusEffect(
     useCallback(() => {
       if (typeof route.params !== "undefined") {
-        const { newItem, event } = route.params;
-        if (newItem) {
-          event.startDate = moment(
-            event.startDate,
-            "DD-MM-YYYY HH:mm"
-          ).toDate();
-          event.endDate = moment(event.endDate, "DD-MM-YYYY HH:mm").toDate();
-          setItems([...items, event]);
-        }
-        showMessage({
-          message: "Success!",
-          description: "Created new event",
-          type: "success",
-          position: "bottom",
-          titleStyle: styles.statusTitle,
-          textStyle: styles.statusDescription,
-          style: styles.statusContainer,
-          floating: true,
-          icon: "auto",
-        });
-        route.params = undefined;
+        const { event } = route.params;
+        postItemsToDatabase(event);
       }
+      route.params = undefined;
     }, [route])
   );
 
   // This is strip functionality
   let [markedDates, setMarkedDates] = useState([]);
-
-  let datesWhitelist = [
-    {
-      start: moment(),
-      end: moment().add(3, "days"), // total 4 days enabled
-    },
-  ];
-  let datesBlacklist = [moment().add(1, "days")]; // 1 day disabled
 
   return (
     <View style={styles.container}>
@@ -276,7 +249,6 @@ function CalendarScreen({ screenName, navigation, route }) {
         />
       </ScrollView>
     </View>
-    // **TODO: Finish calendar functionality**
   );
 }
 
@@ -383,7 +355,6 @@ function AddEventScreen() {
         description: eventDescription,
         backgroundColor: eventColor,
         borderColor: eventBorderColor,
-        attachments: undefined,
         startDate: interStartTime,
         endDate: interEndTime,
       },
