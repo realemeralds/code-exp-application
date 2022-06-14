@@ -1,3 +1,4 @@
+
 // Basic styles and components
 import React, { useEffect, useState, useCallback, useContext } from "react";
 import {
@@ -10,43 +11,36 @@ import {
 } from "react-native";
 import styles from "../styles";
 
-// Paper Text Input
 import { TextInput } from "react-native-paper";
 
-// Custom icons and font and loading
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 import AppLoading from "expo-app-loading";
 
-// Custom Search and Add event components
 import SearchEvent from "../components/HeaderSearchEvent";
 import AddEvent from "../components/HeaderAddEvent";
 
-// Calendar
 import moment from "moment";
 import CalendarStrip from "react-native-calendar-strip";
 import Timetable from "react-native-calendar-timetable";
 import MyItemCard from "../components/CalendarItem";
 
-// Date Picker
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
-// Caching and Backend Integration
 import { ItemsContext } from "../components/ItemsContext";
 import { AuthContext } from "../components/Context";
 
-// Navigation
 import { createStackNavigator } from "@react-navigation/stack";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
-// UUID
 const { v4: uuidv4, v4 } = require("uuid");
 import "react-native-get-random-values";
 
+
+import { showMessage } from "react-native-flash-message";
 const Stack = createStackNavigator();
 
 export default function HomeScreen({ navigation }) {
-  // Grab fonts
   const [loaded] = useFonts({
     SFUITextRegular: require("../assets/fonts/SFUITextRegular.otf"),
     SFProTextLight: require("../assets/fonts/SFProTextLight.otf"),
@@ -55,7 +49,6 @@ export default function HomeScreen({ navigation }) {
     SFProDisplayMedium: require("../assets/fonts/SFProDisplayMedium.otf"),
   });
 
-  // Update the header when loaded, including the add event and search event stuff
   return loaded ? (
     <Stack.Navigator initialRouteName="Calendar">
       <Stack.Screen name="Calendar" component={CalendarScreen} />
@@ -70,8 +63,6 @@ export default function HomeScreen({ navigation }) {
     <AppLoading />
   );
 }
-
-// -------------------------------------------------------------------------CALENDAR STRIP-------------------------------------------------------------------
 
 function CalendarScreen({ screenName, navigation, route }) {
   const window = useWindowDimensions();
@@ -90,7 +81,6 @@ function CalendarScreen({ screenName, navigation, route }) {
     });
   }, [screenName]);
 
-  // This is timetable functionality
   const [currentDate, setCurrentDate] = useState(new Date());
   const [items, setItems] = useState([]);
 
@@ -122,7 +112,6 @@ function CalendarScreen({ screenName, navigation, route }) {
     }, [route])
   );
 
-  // This is strip functionality
   let [markedDates, setMarkedDates] = useState([]);
 
   return (
@@ -135,7 +124,6 @@ function CalendarScreen({ screenName, navigation, route }) {
         }}
       >
         <CalendarStrip
-          // Container style
           style={{
             height: 110,
             paddingBottom: 35,
@@ -146,16 +134,11 @@ function CalendarScreen({ screenName, navigation, route }) {
             highlightColor: "#4fbe9e66",
             duration: 400,
           }}
-          // Scroll
           scrollable
           scrollToOnSetSelectedDate={false}
           selectedDate={currentDate}
           scrollerPaging
-          // Array of whitelisted dates with moment()
-          // datesWhitelist={datesWhitelist}
-          // datesBlacklist={datesBlacklist}
           markedDates={markedDates}
-          // Header
           calendarHeaderStyle={{
             color: "#222222",
             fontFamily: "SFProTextSemibold",
@@ -194,7 +177,6 @@ function CalendarScreen({ screenName, navigation, route }) {
               color: "#353535",
             },
           ]}
-          // Left and right icons
           markedDatesStyle={{ marginTop: -1, paddingBottom: 1 }}
           iconStyle={{ height: "60%", width: "60%" }}
           iconLeft={require("../assets/chevron-left.png")}
@@ -204,7 +186,6 @@ function CalendarScreen({ screenName, navigation, route }) {
             justifyContent: "center",
             alignItems: "center",
           }}
-          // Link to functions
           onDateSelected={(date) => {
             setCurrentDate(date.toDate());
           }}
@@ -213,12 +194,9 @@ function CalendarScreen({ screenName, navigation, route }) {
       <ScrollView style={{ top: 84, marginBottom: 109 }}>
         <Timetable
           // Docs: https://github.com/dorkyboi/react-native-calendar-timetable?ref=reactnativeexample.com#layout
-
-          // Rendering stuff
           items={items}
-          cardComponent={MyItemCard} // pass as a prop
+          cardComponent={MyItemCard}
           date={currentDate}
-          // Layout customisation
           width={window.width - 42}
           style={{
             headersContainer: {},
@@ -252,7 +230,6 @@ function CalendarScreen({ screenName, navigation, route }) {
   );
 }
 
-// ----------------------------------------------------------------- DETAILS SCREEN --------------------------------------------------
 function DetailsScreen({ route }) {
   const item = route.params;
   const [loaded] = useFonts({
@@ -261,7 +238,6 @@ function DetailsScreen({ route }) {
     SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
   });
 
-  const timeText = () => {};
   return (
     <View style={styles.detailsContainer}>
       <View
@@ -280,7 +256,7 @@ function DetailsScreen({ route }) {
     // TODO: Attachment functionality
   );
 }
-// ----------------------------- add event screen ---------------------------------
+
 function AddEventScreen() {
   const navigation = useNavigation();
 
@@ -322,7 +298,6 @@ function AddEventScreen() {
   };
 
   const handleConfirm = (date) => {
-    // console.warn(`A ${currentPicker} has been picked: ${date}`);
     if (currentPicker === "date") {
       setdatePicked(moment(date));
     } else if (currentPicker === "startTime") {

@@ -1,25 +1,17 @@
-// React Hooks and components
 import React, { useState } from "react";
 import {
   Text,
   View,
-  Image,
   TouchableOpacity,
   FlatList,
   SafeAreaView,
 } from "react-native";
 
-// stylesheet
 import styles from "../styles";
 
-// Navigation
 import { createStackNavigator } from "@react-navigation/stack";
 
-// Video Card
 import VideoCard from "../components/VideoCard";
-
-// Animations
-import * as Animatable from "react-native-animatable";
 
 const Stack = createStackNavigator();
 
@@ -150,14 +142,14 @@ export default function LibraryScreen() {
       item.type === "Documentary"
         ? "#0CD195"
         : item.type === "Webisodes"
-        ? "#1FC3D2"
-        : "#F5C978";
+          ? "#1FC3D2"
+          : "#F5C978";
     const backgroundColor =
       item.type === "Documentary"
         ? "#C8F8EB"
         : item.type === "Webisodes"
-        ? "#E1E8FF"
-        : "#EFDFC8";
+          ? "#E1E8FF"
+          : "#EFDFC8";
 
     return (
       <VideoCard
