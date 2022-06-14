@@ -3,17 +3,14 @@ import {
   View,
   Text,
   Image,
-  StyleSheet,
   TextInput,
   TouchableOpacity,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-// Authentication
 import { AuthContext } from "../components/Context";
 import { showMessage } from "react-native-flash-message";
 
-// Stylesheet
 import styles from "../styles";
 
 const SignInScreen = () => {
