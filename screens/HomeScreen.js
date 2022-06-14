@@ -30,6 +30,7 @@ import { ItemsContext } from "../components/ItemsContext";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
+const { v4: uuidv4, v4 } = require("uuid");
 import "react-native-get-random-values";
 
 // TODO: remove
