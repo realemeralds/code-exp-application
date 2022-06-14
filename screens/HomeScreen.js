@@ -1,4 +1,6 @@
-import React, { useEffect, useState, useCallback } from "react";
+
+// Basic styles and components
+import React, { useEffect, useState, useCallback, useContext } from "react";
 import {
   View,
   Text,
@@ -26,6 +28,7 @@ import MyItemCard from "../components/CalendarItem";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import { ItemsContext } from "../components/ItemsContext";
+import { AuthContext } from "../components/Context";
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
@@ -33,10 +36,8 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 const { v4: uuidv4, v4 } = require("uuid");
 import "react-native-get-random-values";
 
-// TODO: remove
-// Casper: ???
-import { showMessage } from "react-native-flash-message";
 
+import { showMessage } from "react-native-flash-message";
 const Stack = createStackNavigator();
 
 export default function HomeScreen({ navigation }) {
@@ -65,10 +66,14 @@ export default function HomeScreen({ navigation }) {
 
 function CalendarScreen({ screenName, navigation, route }) {
   const window = useWindowDimensions();
-  const { getItemsFromDatabase, localItems } = React.useContext(ItemsContext);
 
+  // Get contexts
+  const { getItemsFromDatabase, postItemsToDatabase, localItems } =
+    React.useContext(ItemsContext);
+  const { loginState } = useContext(AuthContext);
+
+  // Set headerbar
   useEffect(() => {
-    getItemsFromDatabase("hello", "world");
     navigation.setOptions({
       title: "",
       headerRight: () => <AddEvent />,
@@ -84,6 +89,7 @@ function CalendarScreen({ screenName, navigation, route }) {
   }, [localItems]);
 
   useEffect(() => {
+    getItemsFromDatabase(loginState.userName, loginState.password);
     console.log(`items are ${JSON.stringify(items)}`);
     setMarkedDates(
       items.map((element) => {
@@ -96,32 +102,13 @@ function CalendarScreen({ screenName, navigation, route }) {
     );
   }, [items]);
 
-  // Turn into get request
   useFocusEffect(
     useCallback(() => {
       if (typeof route.params !== "undefined") {
-        const { newItem, event } = route.params;
-        if (newItem) {
-          event.startDate = moment(
-            event.startDate,
-            "DD-MM-YYYY HH:mm"
-          ).toDate();
-          event.endDate = moment(event.endDate, "DD-MM-YYYY HH:mm").toDate();
-          setItems([...items, event]);
-        }
-        showMessage({
-          message: "Success!",
-          description: "Created new event",
-          type: "success",
-          position: "bottom",
-          titleStyle: styles.statusTitle,
-          textStyle: styles.statusDescription,
-          style: styles.statusContainer,
-          floating: true,
-          icon: "auto",
-        });
-        route.params = undefined;
+        const { event } = route.params;
+        postItemsToDatabase(event);
       }
+      route.params = undefined;
     }, [route])
   );
 
@@ -240,7 +227,6 @@ function CalendarScreen({ screenName, navigation, route }) {
         />
       </ScrollView>
     </View>
-    // **TODO: Finish calendar functionality**
   );
 }
 
@@ -344,7 +330,6 @@ function AddEventScreen() {
         description: eventDescription,
         backgroundColor: eventColor,
         borderColor: eventBorderColor,
-        attachments: undefined,
         startDate: interStartTime,
         endDate: interEndTime,
       },

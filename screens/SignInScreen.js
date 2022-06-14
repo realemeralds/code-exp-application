@@ -115,7 +115,6 @@ const SignInScreen = () => {
         disabled={buttonDisabled}
         onPress={() => {
           if (username !== "" && password !== "") {
-            console.log("pressed!");
             setButtonDisabled(true);
             signIn(username, password);
             setButtonDisabled(false);
