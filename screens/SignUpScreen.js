@@ -28,12 +28,12 @@ import { AuthContext } from "../components/Context";
 const Stack = createStackNavigator();
 
 const SignUpScreen = () => {
-  const [loaded] = useFonts({
-    SFUITextRegular: require("../assets/fonts/SFUITextRegular.otf"),
-    SFProTextLight: require("../assets/fonts/SFProTextLight.otf"),
-    SFProTextMedium: require("../assets/fonts/SFProTextMedium.otf"),
-    SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
-  });
+  // const [loaded] = useFonts({
+  //   SFUITextRegular: require("../assets/fonts/SFUITextRegular.otf"),
+  //   SFProTextLight: require("../assets/fonts/SFProTextLight.otf"),
+  //   SFProTextMedium: require("../assets/fonts/SFProTextMedium.otf"),
+  //   SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
+  // });
 
   // Update the header when loaded, including the add event and search event stuff
   return loaded ? (
@@ -115,6 +115,7 @@ const SignUpFirstScreen = () => {
           value={username}
           style={styles.textInput}
           selectionColor="#05375a"
+          maxLength={40}
         />
       </View>
       <View
@@ -135,6 +136,7 @@ const SignUpFirstScreen = () => {
           value={password}
           selectionColor="#05375a"
           secureTextEntry={true}
+          maxLength={40}
         />
       </View>
       <View
@@ -155,6 +157,7 @@ const SignUpFirstScreen = () => {
           secureTextEntry={true}
           onChangeText={setConfirmPassword}
           value={confirmPassword}
+          maxLength={40}
         />
       </View>
       <TouchableOpacity
@@ -263,6 +266,7 @@ const SignUpSecondScreen = ({ route }) => {
           selectionColor="#05375a"
           onChangeText={setPlatoon}
           value={platoon}
+          maxLength={40}
         />
       </View>
       <TouchableOpacity

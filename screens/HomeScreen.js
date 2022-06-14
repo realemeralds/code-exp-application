@@ -16,8 +16,6 @@ import styles from "../styles";
 // Paper Text Input
 import { TextInput } from "react-native-paper";
 
-import { createStackNavigator } from "@react-navigation/stack";
-
 // Custom icons and font and loading
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
@@ -38,6 +36,9 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 // Caching and Backend Integration
 import { ItemsContext } from "../components/ItemsContext";
+
+// Navigation
+import { createStackNavigator } from "@react-navigation/stack";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 // UUID
