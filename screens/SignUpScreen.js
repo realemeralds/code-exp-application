@@ -1,39 +1,27 @@
-// Basic React components
 import React, { useState } from "react";
 import {
   View,
   Text,
-  Button,
-  StyleSheet,
   Image,
   TextInput,
-  Platform,
   TouchableOpacity,
 } from "react-native";
 
-// Custom Icons
 import {
   MaterialCommunityIcons,
   MaterialIcons,
-  Ionicons,
 } from "@expo/vector-icons";
 
-// Custom Fonts + Loading
 import { useFonts } from "expo-font";
-import AppLoading from "expo-app-loading";
 
-// React Navigation
 import { createStackNavigator } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 
-// Authentication
 import { AuthContext } from "../components/Context";
 const Stack = createStackNavigator();
 
-// Flashbars
 import { showMessage } from "react-native-flash-message";
 
-// Stylesheet
 import styles from "../styles";
 
 const SignUpScreen = () => {
