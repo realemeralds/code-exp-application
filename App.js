@@ -285,7 +285,6 @@ export default function App() {
         console.log("getting items...");
         console.log(res.status);
         console.log(res.url);
-        console.log(`res json is ${JSON.stringify(res)}`);
         if (res.status == 200) {
           const parsedJSON = res;
           parsedJSON.startDate = new Date(parsedJSON.startDate);
