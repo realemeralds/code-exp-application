@@ -47,15 +47,16 @@ import "react-native-get-random-values";
 const Stack = createStackNavigator();
 
 export default function HomeScreen({ navigation }) {
+  // Grab fonts
   const [loaded] = useFonts({
     SFUITextRegular: require("../assets/fonts/SFUITextRegular.otf"),
     SFProTextLight: require("../assets/fonts/SFProTextLight.otf"),
     SFProTextMedium: require("../assets/fonts/SFProTextMedium.otf"),
     SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
+    SFProDisplayMedium: require("../assets/fonts/SFProDisplayMedium.otf"),
   });
 
   // Update the header when loaded, including the add event and search event stuff
-
   return loaded ? (
     <Stack.Navigator initialRouteName="Calendar">
       <Stack.Screen name="Calendar" component={CalendarScreen} />
@@ -97,10 +98,11 @@ function CalendarScreen({ screenName, navigation, route }) {
   useEffect(() => {
     console.log(`items are ${JSON.stringify(items)}`);
     setMarkedDates(
-      items.map((element, index) => {
+      items.map((element) => {
+        let eventDate = moment(element.startDate);
         return {
-          date: moment(element.startDate),
-          dots: [{ color: element.borderColor }],
+          date: eventDate,
+          dots: [{ color: "#185CDE" }],
         };
       })
     );
@@ -125,17 +127,7 @@ function CalendarScreen({ screenName, navigation, route }) {
   );
 
   // This is strip functionality
-  let [markedDates, setMarkedDates] = useState([
-    {
-      date: moment(),
-      dots: [
-        {
-          color: "#185CDE",
-          selectedcolor: "#185CDE",
-        },
-      ],
-    },
-  ]);
+  let [markedDates, setMarkedDates] = useState([]);
 
   let datesWhitelist = [
     {
@@ -335,6 +327,7 @@ function AddEventScreen() {
     setDatePickerType(datePicker);
     setCurrentPicker(currentPicker);
     setDatePickerVisibility(true);
+    console.log("test");
   };
 
   const hideDateTimePicker = () => {
@@ -543,70 +536,16 @@ function AddEventScreen() {
         <Ionicons name="attach-sharp" size={16} color="white" />
         <Text style={styles.eventAttachButtonText}>Attach Files...</Text>
       </TouchableOpacity>
-      <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode={datePickerType}
-        onConfirm={handleConfirm}
-        onCancel={hideDateTimePicker}
-      />
+      {isDatePickerVisible ? (
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode={datePickerType}
+          onConfirm={handleConfirm}
+          onCancel={hideDateTimePicker}
+        />
+      ) : (
+        <></>
+      )}
     </View>
   );
 }
-
-// ----------------------------- misc stuff ---------------------------------
-// styleWeekend
-// weekendDateNameStyle={[
-//   styles.dateNameStyle,
-//   {
-//     color: "#ffffff",
-//   },
-// ]}
-// weekendDateNumberStyle={[
-//   styles.dateNameStyle,
-//   {
-//     color: "#ffffff",
-//   },
-// ]}
-// ========================
-// function componentDidMount() {
-//   for (let i = 0; i < items.length; i++) {
-//     const { startDate, endDate } = items;
-//     let newDates = [];
-//     if (moment(startDate).format("LL") === moment(endDate).format("LL")) {
-//       // spagetti code
-//       newDates.push({
-//         date: startDate,
-//         dots: [
-//           {
-//             color: "#185CDE",
-//             selectedcolor: "#185CDE",
-//           },
-//         ],
-//       });
-//     } else {
-//       newDates.push(
-//         ...markedDates,
-//         {
-//           date: startDate,
-//           dots: [
-//             {
-//               color: "#185CDE",
-//               selectedcolor: "#185CDE",
-//             },
-//           ],
-//         },
-//         {
-//           date: endDate,
-//           dots: [
-//             {
-//               color: "#185CDE",
-//               selectedcolor: "#185CDE",
-//             },
-//           ],
-//         }
-//       );
-//     }
-//     // push all the marks to the calendar
-//     setMarkedDates([...markedDates, ...newDates]);
-//   }
-// }

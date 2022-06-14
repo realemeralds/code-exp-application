@@ -1,7 +1,7 @@
 import styles from "../styles";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity, View, Text } from "react-native";
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import CalendarAttachment from "./CalendarAttachment";
 /**
  * Example item component
@@ -18,8 +18,7 @@ export default function MyItemCard({
   currentPage,
 }) {
   const navigation = useNavigation(item);
-  let x, y, width, height;
-
+  const [attachmentsShown, setAttachmentsShown] = useState(true);
   return (
     <TouchableOpacity
       style={{
@@ -36,6 +35,9 @@ export default function MyItemCard({
         flexDirection: "row",
         overflow: "hidden",
       }}
+      onLayout={(event) => {
+        setAttachmentsShown(event.nativeEvent.layout.width > 200);
+      }}
       activeOpacity={0.9}
       onPress={() => {
         navigation.navigate("Details", item);
@@ -51,8 +53,10 @@ export default function MyItemCard({
         </Text>
       </View>
       <View>
-        {width > 2000 ? <></> : <></>}
-        <CalendarAttachment attachments={item.attachments} />
+        <CalendarAttachment
+          attachments={item.attachments}
+          attachmentsShown={attachmentsShown}
+        />
       </View>
     </TouchableOpacity>
   );
