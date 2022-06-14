@@ -1,16 +1,12 @@
-// Basic react components
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 
-// React Navigation + Icons
 import { Ionicons } from "@expo/vector-icons";
 import CalendarIcon from "../components/CustomIcon";
 
-// Custom fonts
 import * as Font from "expo-font";
 import { useFonts } from "expo-font";
 
-// UUID
 const { v4: uuidv4, v4 } = require("uuid");
 import "react-native-get-random-values";
 
@@ -48,16 +44,14 @@ export default function MyTabBar({ state, descriptors, navigation }) {
       }}
     >
       {state.routes.map((route, index) => {
-        // Create an array, where each element is generated with the stuff below
         const { options } = descriptors[route.key]; // Get the options from the Tab.Screen component above
 
-        // label name (at bottom)
         const label =
           options.tabBarLabel !== undefined
             ? options.tabBarLabel
             : options.title !== undefined
-            ? options.title
-            : route.name;
+              ? options.title
+              : route.name;
 
         const icon = ({ route }) => {
           let iconName;
@@ -91,7 +85,6 @@ export default function MyTabBar({ state, descriptors, navigation }) {
           }
         };
 
-        // Probably don't need this
         const onLongPress = () => {
           navigation.emit({
             type: "tabLongPress",
