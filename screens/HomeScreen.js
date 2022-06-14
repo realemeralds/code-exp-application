@@ -350,7 +350,7 @@ function AddEventScreen() {
         setStartTime(moment(date).subtract("1", "hour"));
       }
     }
-    hideDatePicker();
+    setDatePickerVisibility(false);
   };
 
   const eventAdded = () => {
@@ -537,15 +537,13 @@ function AddEventScreen() {
         <Ionicons name="attach-sharp" size={16} color="white" />
         <Text style={styles.eventAttachButtonText}>Attach Files...</Text>
       </TouchableOpacity>
-      {isDatePickerVisible ? (
+      {isDatePickerVisible && (
         <DateTimePickerModal
-          isVisible={isDatePickerVisible}
+          isVisible={true}
           mode={datePickerType}
           onConfirm={handleConfirm}
           onCancel={hideDateTimePicker}
         />
-      ) : (
-        <></>
       )}
     </View>
   );

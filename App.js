@@ -223,7 +223,7 @@ export default function App() {
               <Tab.Screen
                 name="Library"
                 component={LibraryScreen}
-                options={{ title: "library" }}
+                options={{ headerShown: false }}
               />
             </Tab.Navigator>
           ) : (

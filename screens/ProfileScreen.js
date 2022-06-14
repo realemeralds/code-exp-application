@@ -19,8 +19,8 @@ export default function ProfileScreen() {
     >
       <Text
         style={{
-          fontFamily: "SFProTextMedium",
-          fontSize: 30,
+          fontFamily: "SFProDisplayMedium",
+          fontSize: 34,
           color: "#111111",
           marginBottom: 20,
         }}

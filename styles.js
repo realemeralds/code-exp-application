@@ -156,6 +156,60 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     marginLeft: 5,
   },
+  libraryContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "stretch",
+    paddingTop: 30,
+  },
+  libraryButton: {
+    width: 300,
+    marginLeft: 10,
+    marginRight: 5,
+    alignItems: "flex-start",
+    backgroundColor: "#E1E8FF",
+    padding: 15,
+    marginVertical: 15,
+    borderRadius: 20,
+  },
+  libraryImageContainer: {
+    alignSelf: "stretch",
+    alignItems: "center",
+    justifyContent: "center",
+    aspectRatio: 129 / 83,
+  },
+  libraryImage: {
+    resizeMode: "cover",
+    borderRadius: 10,
+    flex: 1,
+    aspectRatio: 129 / 83,
+    alignSelf: "center",
+  },
+  libraryDocumentaryWrapper: {
+    borderRadius: 10,
+    paddingVertical: 2,
+    paddingHorizontal: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+  libraryDocumentaryText: {
+    fontSize: 10,
+    fontFamily: "SFProTextSemibold",
+    color: "#FFF",
+  },
+  libraryHeader: {
+    fontFamily: "SFProTextSemibold",
+    fontSize: 24,
+    color: "#0C5B43",
+  },
+  libraryDescription: {
+    fontFamily: "SFProTextMedium",
+    fontSize: 10,
+    color: "#575050",
+    marginTop: 10,
+  },
 });
 
 export default styles;
