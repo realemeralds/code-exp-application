@@ -94,7 +94,20 @@ export default function App() {
     return {
       signIn: async (userName, password) => {
         // replace user, pass and Alpha with the values from db
-        if (userName === "user" && password === "pass") {
+        if ((userName === "user" && password === "pass") || true) {
+
+          // error here
+          console.log('Logged in')
+          const res = await fetch('https://code-exp-2022.herokuapp.com/login', {
+            method: 'POST',
+            body: JSON.stringify({
+              username: 'username',
+              password: 'password'
+            }) // dummy username and password (should recieve 200)
+          })
+          console.log(res) // 503 status code recieved
+          // ----------
+
           const pfp = { uri: "../../../../../../assets/pfpjpg.jpg" };
           const platoon = "Alpha";
           dispatch({
@@ -104,12 +117,6 @@ export default function App() {
             pfp: pfp,
             platoon: platoon,
           });
-          try {
-            await SecureStore.setItemAsync("notAUserName", userName);
-            await SecureStore.setItemAsync("notAPassword", password);
-          } catch (e) {
-            console.log(e);
-          }
         } else {
           alert("Invalid Credentials.");
         }
