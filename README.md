@@ -31,6 +31,10 @@ expo start
 
 after load, press p to run in production mode
 
+## Login credentials
+Username: bob
+Password: password
+
 # See Also
 
 - [Backend repository](https://github.com/Capseeyool/code-exp-2022-backend)
