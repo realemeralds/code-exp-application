@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "code-exp",
-    "slug": "code-exp",
+    "name": "learNS",
+    "slug": "learNS",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/soldier.png",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
@@ -23,8 +23,9 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.example.app",
-      "softwareKeyboardLayoutMode": "pan"
+      "package": "com.example.learNS",
+      "softwareKeyboardLayoutMode": "pan",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
