@@ -32,7 +32,7 @@ expo start
 after load, press p to run in production mode
 
 ## Login credentials
-Username: bob
+Username: bob  
 Password: password
 
 # See Also
