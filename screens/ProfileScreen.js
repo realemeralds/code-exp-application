@@ -7,7 +7,6 @@ import { AuthContext } from "../components/Context";
 
 export default function ProfileScreen() {
   const { signOut, loginState } = React.useContext(AuthContext);
-  console.log(loginState.pfp);
   return (
     <View
       style={{
@@ -28,7 +27,7 @@ export default function ProfileScreen() {
         Profile
       </Text>
       <Image
-        source={loginState.pfp}
+        source={require("../assets/charlie.jpg")}
         style={{ width: 220, height: 220, borderRadius: 125, marginBottom: 10 }}
       />
       <Text

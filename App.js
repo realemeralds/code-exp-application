@@ -261,6 +261,54 @@ export default function App() {
         console.log(res.status);
         console.log(res.url);
         if (res.status == 200) {
+          if (res == []) {
+            res = [
+              {
+                title: "Physical Conditioning",
+                description: "Run 2.4km",
+                backgroundcolor: "#EDDDFE",
+                bordercolor: "#A361EB",
+                startdate: "1655427600000",
+                enddate: "1655431200000",
+                attachments: {
+                  "pain and suffering": "hello world!",
+                },
+              },
+              {
+                title: "Grenade Throwing",
+                description: "Practice throwing grenades",
+                backgroundcolor: "#E1E8FF",
+                bordercolor: "#1FC3D2",
+                startdate: "1655434800000",
+                enddate: "1655438400000",
+                attachments: {
+                  "pain and suffering": "hello world!",
+                },
+              },
+              {
+                title: "Rifle Range",
+                description: "Your first live fire exercise",
+                backgroundcolor: "#FFF4E4",
+                bordercolor: "#F5C978",
+                startdate: "1655438400000",
+                enddate: "1655442000000",
+                attachments: {
+                  "pain and suffering": "hello world!",
+                },
+              },
+              {
+                title: "Drills",
+                description: "Practice parade drills",
+                backgroundcolor: "#FFF4E4",
+                bordercolor: "#F5C978",
+                startdate: "1655427600000",
+                enddate: "1655431200000",
+                attachments: {
+                  "pain and suffering": "hello world!",
+                },
+              },
+            ];
+          }
           const parsedJSON = res;
           parsedJSON.startDate = new Date(parsedJSON.startDate);
           parsedJSON.endDate = new Date(parsedJSON.startDate);

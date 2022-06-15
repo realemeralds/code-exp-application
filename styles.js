@@ -251,14 +251,6 @@ const styles = StyleSheet.create({
     paddingTop: 4,
     marginBottom: 10,
   },
-  splashScreenHeader: {
-    fontFamily: "SFProTextMedium",
-    textAlign: "center",
-    fontSize: 34,
-    color: "#111111",
-    paddingHorizontal: 40,
-    marginTop: 20,
-  },
 });
 
 export default styles;

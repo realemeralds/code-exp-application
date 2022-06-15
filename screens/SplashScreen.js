@@ -1,21 +1,35 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 // Custom Fonts
+import { useFonts } from "expo-font";
 import { useNavigation } from "@react-navigation/native";
-
-// Stylesheet
-import styles from "../styles";
 
 const SplashScreen = () => {
   const navigation = useNavigation();
-
+  // const [loaded] = useFonts({
+  //   SFUITextRegular: require("../assets/fonts/SFUITextRegular.otf"),
+  //   SFProTextLight: require("../assets/fonts/SFProTextLight.otf"),
+  //   SFProTextMedium: require("../assets/fonts/SFProTextMedium.otf"),
+  //   SFProTextSemibold: require("../assets/fonts/SFProTextSemibold.otf"),
+  // });
   return (
     <View style={styles.container}>
       <Image
         style={{ height: 250, width: 250, paddingHorizontal: 20 }}
         source={require("../assets/boots.png")}
       />
-      <Text style={styles.splashScreenHeader}>Get NS under control.</Text>
+      <Text
+        style={{
+          fontFamily: "SFProTextMedium",
+          textAlign: "center",
+          fontSize: 34,
+          color: "#111111",
+          paddingHorizontal: 40,
+          marginTop: 20,
+        }}
+      >
+        Get NS under control.
+      </Text>
       <Text
         style={{
           marginTop: 10,
